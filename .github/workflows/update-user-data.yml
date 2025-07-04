@@ -1,0 +1,71 @@
+name: Update User Data
+
+on:
+  # Run daily at 2 AM UTC
+  schedule:
+    - cron: '0 2 * * *'
+  
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      only_stale:
+        description: 'Only update stale profiles (older than 24h)'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      stale_hours:
+        description: 'Hours to consider a profile stale'
+        required: false
+        default: '24'
+        type: string
+      batch_size:
+        description: 'Number of users per batch'
+        required: false
+        default: '10'
+        type: string
+
+env:
+  MONGODB_CONN: ${{ secrets.MONGODB_CONN }}
+  TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+
+jobs:
+  update-user-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+
+    - name: Install dependencies
+      run: bun install
+
+    - name: Set environment variables for manual trigger
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        echo "ONLY_STALE=${{ github.event.inputs.only_stale }}" >> $GITHUB_ENV
+        echo "STALE_HOURS=${{ github.event.inputs.stale_hours }}" >> $GITHUB_ENV
+        echo "BATCH_SIZE=${{ github.event.inputs.batch_size }}" >> $GITHUB_ENV
+
+    - name: Set default environment variables for scheduled run
+      if: github.event_name == 'schedule'
+      run: |
+        echo "ONLY_STALE=true" >> $GITHUB_ENV
+        echo "STALE_HOURS=24" >> $GITHUB_ENV
+        echo "BATCH_SIZE=10" >> $GITHUB_ENV
+
+    - name: Update user data
+      run: bun run src/actions/getUserData.ts
+
+    - name: Log completion
+      run: |
+        echo "✅ User data update completed successfully"
+        echo "📅 Run time: $(date)"
+        echo "🔧 Trigger: ${{ github.event_name }}"

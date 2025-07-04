@@ -7,6 +7,7 @@
     "start": "bun run index.ts",
     "scrape": "bun run index.ts",
     "batch-scrape": "bun run src/batch-scraper.ts",
+    "update-users": "bun run src/actions/getUserData.ts",
     "test": "bun test"
   },
   "devDependencies": {

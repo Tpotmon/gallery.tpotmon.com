@@ -81,4 +81,56 @@ export class DatabaseManager {
     await this.profilesCollection.createIndex({ boosterNumber: 1 });
     console.log('Created database indexes');
   }
+
+  async getAllUniqueProfileIds(): Promise<string[]> {
+    const result = await this.profilesCollection.distinct('profileId');
+    return result.filter(id => id && typeof id === 'string');
+  }
+
+  async getProfileIdsInBatches(batchSize: number = 10): Promise<string[][]> {
+    const allIds = await this.getAllUniqueProfileIds();
+    const batches: string[][] = [];
+    
+    for (let i = 0; i < allIds.length; i += batchSize) {
+      batches.push(allIds.slice(i, i + batchSize));
+    }
+    
+    return batches;
+  }
+
+  async getLastUpdatedDate(profileId: string): Promise<Date | null> {
+    const latest = await this.profilesCollection
+      .findOne(
+        { profileId: profileId },
+        { sort: { snapshotDate: -1 } }
+      );
+    return latest?.snapshotDate || null;
+  }
+
+  async getStaleProfileIds(olderThanHours: number = 24): Promise<string[]> {
+    const cutoffDate = new Date(Date.now() - (olderThanHours * 60 * 60 * 1000));
+    
+    // Get all profile IDs that haven't been updated in the specified time
+    const pipeline = [
+      {
+        $group: {
+          _id: '$profileId',
+          lastUpdate: { $max: '$snapshotDate' }
+        }
+      },
+      {
+        $match: {
+          lastUpdate: { $lt: cutoffDate }
+        }
+      },
+      {
+        $project: {
+          _id: 1
+        }
+      }
+    ];
+
+    const result = await this.profilesCollection.aggregate(pipeline).toArray();
+    return result.map(doc => doc._id).filter(id => id && typeof id === 'string');
+  }
 }
