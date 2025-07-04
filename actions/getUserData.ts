@@ -1,5 +1,5 @@
-import { DatabaseManager } from '../lib/database';
-import getBatchTwitterProfiles from '../lib/twitter/batch-profiles';
+import { DatabaseManager } from './lib/database';
+import getBatchTwitterProfiles from './lib/twitter/batch-profiles';
 
 export interface GetUserDataConfig {
   mongoConnectionString: string;

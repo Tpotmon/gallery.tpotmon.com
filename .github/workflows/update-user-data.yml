@@ -62,7 +62,7 @@ jobs:
         echo "BATCH_SIZE=10" >> $GITHUB_ENV
 
     - name: Update user data
-      run: bun run src/actions/getUserData.ts
+      run: bun run actions/getUserData.ts
 
     - name: Log completion
       run: |
