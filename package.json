@@ -1,0 +1,21 @@
+{
+  "name": "gottafarmemall",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun run index.ts",
+    "scrape": "bun run index.ts",
+    "batch-scrape": "bun run src/batch-scraper.ts",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "mongodb": "^6.17.0"
+  }
+}
