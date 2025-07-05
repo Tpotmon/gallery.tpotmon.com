@@ -1,0 +1,196 @@
+---
+export interface Props {
+  card: {
+    id: number;
+    displayName: string;
+    username: string;
+    isBlueVerified: boolean;
+    followers: number;
+    following: number;
+    hitPoints: number;
+    profilePicUrl: string;
+    bannerPicUrl: string;
+    fullArtUrl: string | null;
+    tier: string;
+    abilityName: string;
+    abilityDescription: string;
+    attackName: string;
+    attackDescription: string;
+    attackType: string;
+    attackDamage: number;
+    weaknessType: string;
+    weaknessAmount: number;
+    resistType: string;
+    resistAmount: number;
+    description: string;
+    rarity: string;
+    holo: boolean;
+    xId: string;
+    cardType?: string;
+    disabled?: boolean;
+  };
+}
+
+const { card } = Astro.props;
+const d = card;
+const cardId = card.id;
+
+const getTypeImage = (type: string) => {
+  const typeImages = {
+    goon: "/types/goon.png", 
+    psyop: "/types/psyop.png",
+    gaslight: "/types/gaslight.png",
+    drama: "/types/drama.png", 
+    gay: "/types/gay.png", 
+    furry: "/types/furry.png", 
+    catfish: "/types/catfish.png", 
+    roast: "/types/roast.png", 
+    cringe: "/types/cringe.png", 
+    thirst: "/types/thirst.png",
+  };
+  return typeImages[type as keyof typeof typeImages] || "/types/goon.png";
+};
+
+const getRarityImage = (rarity: string) => {
+  const rarityImages = {
+    "Common": "/rarity/common.png",
+    "Uncommon": "/rarity/uncommon.png", 
+    "Rare": "/rarity/rare.png",
+    "Based Rare": "/rarity/based-rare.png",
+    "Legendary": "/rarity/legendary.png",
+    "Ultra Rare": "/rarity/ultra-rare.png",
+    // Legacy mappings for backwards compatibility
+    "Legendary": "/rarity/legendary.png", "Ace Spec": "/rarity/legendary.png",
+    "Based Rare": "/rarity/based-rare.png", "Double Rare": "/rarity/based-rare.png",
+  };
+  return rarityImages[rarity as keyof typeof rarityImages] || "/rarity/common.png";
+};
+
+const weaknessImage = getTypeImage(d.weaknessType);
+const resistImage = getTypeImage(d.resistType);
+const attackImage = getTypeImage(d.attackType);
+const rarityImage = getRarityImage(d.rarity);
+
+---
+
+<div class="w-full mx-auto">
+  <svg viewBox="0 0 600 840" class={`w-full h-auto ${card.disabled ? 'grayscale brightness-75 opacity-60' : ''}`} xmlns="http://www.w3.org/2000/svg">
+    <!-- Full Art Background with border radius -->
+    <defs>
+      <clipPath id={`fullArtClip_${cardId}`}>
+        <rect x="0" y="0" width="600" height="840" rx="30" ry="30"/>
+      </clipPath>
+      
+      <!-- Subtle bottom gradient for text readability -->
+      <linearGradient id={`bottomGradient_${cardId}`} x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(0,0,0,0)" />
+        <stop offset="70%" stop-color="rgba(0,0,0,0)" />
+        <stop offset="100%" stop-color="rgba(0,0,0,0.4)" />
+      </linearGradient>
+      
+      <!-- Text panel background -->
+      <filter id={`textShadow_${cardId}`}>
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.5)"/>
+      </filter>
+      
+      <!-- Blur filter for background panels -->
+      <filter id={`panelBlur_${cardId}`}>
+        <feGaussianBlur stdDeviation="2"/>
+      </filter>
+    </defs>
+    
+    <!-- Full art background -->
+    <image href={d.fullArtUrl || d.bannerPicUrl || "#"} x="0" y="0" width="600" height="840" clip-path={`url(#fullArtClip_${cardId})`} preserveAspectRatio="xMidYMid slice" />
+    
+    <!-- Subtle bottom gradient -->
+    <rect x="0" y="0" width="600" height="840" rx="30" ry="30" fill={`url(#bottomGradient_${cardId})`} />
+
+    <!-- Top row continuous bar -->
+    <g filter={`url(#textShadow_${cardId})`}>
+      <!-- Megabie section - left with rounded left corners only -->
+      <rect x="30" y="30" width="120" height="40" rx="20" ry="20" fill="rgba(132, 202, 218, 0.95)"/>
+      <rect x="130" y="30" width="20" height="40" fill="rgba(132, 202, 218, 0.95)"/>
+      <text x="90" y="55" font-family="Arial" font-weight="bold" font-size="16" fill="black" text-anchor="middle">{d.tier.toUpperCase()}</text>
+      
+      <!-- Name section - middle with black background -->
+      <rect x="150" y="30" width="320" height="40" fill="rgba(0, 0, 0, 0.6)" filter={`url(#panelBlur_${cardId})`}/>
+      
+      <!-- HP section - right with rounded right corners only -->
+      <rect x="470" y="30" width="100" height="40" rx="20" ry="20" fill="rgba(255, 82, 82, 0.95)"/>
+      <rect x="470" y="30" width="20" height="40" fill="rgba(255, 82, 82, 0.95)"/>
+      <text x="520" y="46" font-family="Arial" font-weight="bold" font-size="12" fill="white" text-anchor="middle">HP</text>
+      <text x="520" y="58" font-family="Arial" font-weight="bold" font-size="16" fill="white" text-anchor="middle">{d.hitPoints}</text>
+      
+      <!-- Display name - centered vertically in top bar -->
+      {d.isBlueVerified ? (
+        <text x="200" y="58" font-family="Arial" font-weight="bold" font-size="24" fill="white" dominant-baseline="middle">{d.displayName}</text>
+      ) : (
+        <text x="165" y="58" font-family="Arial" font-weight="bold" font-size="24" fill="white" dominant-baseline="middle">{d.displayName}</text>
+      )}
+      
+      <!-- White border around entire bar -->
+      <rect x="30" y="30" width="540" height="40" rx="20" ry="20" fill="none" stroke="white" stroke-width="2"/>
+    </g>
+
+    <!-- BlueCheck - centered vertically with display name -->
+    {d.isBlueVerified && (
+      <g filter={`url(#textShadow_${cardId})`}>
+        <image href="/check.png" x="162" y="33" width="35" height="35" />
+      </g>
+    )}
+
+    <!-- Combined ability and attack panel -->
+    <g filter={`url(#textShadow_${cardId})`}>
+      <!-- Translucent background with blur -->
+      <rect x="30" y="500" width="540" height="270" rx="15" ry="15" fill="rgba(0, 0, 0, 0.7)" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1" filter={`url(#panelBlur_${cardId})`}/>
+      
+      <!-- Ability section -->
+      <text x="50" y="530" font-family="Arial" font-weight="bold" font-size="22" fill="white">{d.abilityName}</text>
+      <foreignObject x="50" y="540" width="500" height="80">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: Arial; font-size: 14px; color: rgba(255, 255, 255, 0.9); line-height: 1.4; overflow-wrap: break-word; padding-top: 5px; padding-bottom: 10px;">
+          {d.abilityDescription}
+        </div>
+      </foreignObject>
+      
+      <!-- Divider line - moved up -->
+      <line x1="50" y1="610" x2="550" y2="610" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1"/>
+      
+      <!-- Attack section - moved up -->
+      <text x="50" y="635" font-family="Arial" font-weight="bold" font-size="22" fill="white">{d.attackName}</text>
+      <text x="550" y="635" font-family="Arial" font-weight="bold" font-size="24" fill="white" text-anchor="end">{d.attackDamage}</text>
+      <image href={attackImage} x="50" y="645" width="48" height="48" />
+      
+      <foreignObject x="106" y="645" width="424" height="120">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: Arial; font-size: 16px; color: rgba(255, 255, 255, 0.9); line-height: 1.5; overflow-wrap: break-word; padding-top: 5px; padding-bottom: 15px;">
+          {d.attackDescription}
+        </div>
+      </foreignObject>
+    </g>
+
+    <!-- Bottom info bar - 70% width and centered -->
+    <g filter={`url(#textShadow_${cardId})`}>
+      <rect x="116" y="785" width="364" height="45" rx="10" ry="10" fill="rgba(0, 0, 0, 0.7)" filter={`url(#panelBlur_${cardId})`}/>
+      
+      <!-- Weakness & Resistance - repositioned for narrower bar -->
+      <image href={weaknessImage} x="131" y="795" width="32" height="32" />
+      <text x="171" y="815" font-family="Arial" font-size="20" fill="white">+{d.weaknessAmount}</text>
+      
+      <image href={resistImage} x="236" y="795" width="32" height="32" />
+      <text x="276" y="815" font-family="Arial" font-size="20" fill="white">-{d.resistAmount}</text>
+      
+      <!-- Card info - repositioned for narrower bar -->
+      <image href={rarityImage} x="345" y="786" width="43" height="43" />
+      <text x="426" y="812" font-family="Arial" font-size="18" fill="rgba(255, 255, 255, 0.8)" text-anchor="middle">#{d.id.toString().padStart(3, "0")}</text>
+    </g>
+    
+    <!-- Disabled Overlay -->
+    {card.disabled && (
+      <g>
+        <rect x="0" y="0" width="600" height="840" rx="30" ry="30" fill="rgba(0,0,0,0.4)" />
+        <rect x="150" y="390" width="300" height="60" rx="15" ry="15" fill="rgba(255, 68, 68, 0.9)" stroke="white" stroke-width="2"/>
+        <text x="300" y="415" font-family="Arial" font-weight="bold" font-size="20" fill="white" text-anchor="middle">NOT AVAILABLE</text>
+        <text x="300" y="435" font-family="Arial" font-size="16" fill="white" text-anchor="middle">IN BOOSTER PACKS</text>
+      </g>
+    )}
+  </svg>
+</div>

@@ -1,0 +1,10 @@
+{
+  "id": 12,
+  "title": "Monitoring the Situation",
+  "type": "Action",
+  "effect": "Nothing happens this turn.",
+  "flavor": "We're watching very closely.",
+  "imageUrl": "/action-cards/monitoring-the-situation.png",
+  "rarity": "Common",
+  "inspiredBy": "https://x.com/_im_sigh_/status/1937103543758106964"
+}

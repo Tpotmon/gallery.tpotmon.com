@@ -1,0 +1,9 @@
+{
+  "id": 45,
+  "title": "Deploy to Prod",
+  "type": "Action",
+  "effect": "A change to the system makes everything stop working. Skip the attack phase of this turn.",
+  "flavor": "It worked on staging.",
+  "imageUrl": "/action-cards/deploy-to-prod.png",
+  "rarity": "Common"
+}

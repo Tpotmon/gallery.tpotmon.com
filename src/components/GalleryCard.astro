@@ -1,0 +1,163 @@
+---
+import FullArtCard from './FullArtCard.astro';
+
+export interface Props {
+  card: {
+    id: number;
+    displayName: string;
+    username: string;
+    isBlueVerified: boolean;
+    followers: number;
+    following: number;
+    hitPoints: number;
+    profilePicUrl: string;
+    bannerPicUrl: string;
+    fullArtUrl: string | null;
+    tier: string;
+    abilityName: string;
+    abilityDescription: string;
+    attackName: string;
+    attackDescription: string;
+    attackType: string;
+    attackDamage: number;
+    weaknessType: string;
+    weaknessAmount: number;
+    resistType: string;
+    resistAmount: number;
+    description: string;
+    rarity: string;
+    holo: boolean;
+    xId: string;
+    cardType?: string;
+    disabled?: boolean;
+  };
+}
+
+const { card } = Astro.props;
+const d = card;
+const cardId = card.id;
+
+const getTypeImage = (type: string) => {
+  const typeImages = {
+    goon: "/types/goon.png", 
+    psyop: "/types/psyop.png",
+    gaslight: "/types/gaslight.png",
+    drama: "/types/drama.png", 
+    gay: "/types/gay.png", 
+    furry: "/types/furry.png", 
+    catfish: "/types/catfish.png", 
+    roast: "/types/roast.png", 
+    cringe: "/types/cringe.png", 
+    thirst: "/types/thirst.png",
+  };
+  return typeImages[type as keyof typeof typeImages] || "/types/goon.png";
+};
+
+const weaknessImage = getTypeImage(d.weaknessType);
+const resistImage = getTypeImage(d.resistType);
+const attackImage = getTypeImage(d.attackType);
+---
+
+{card.cardType === "fullArt" ? (
+  <FullArtCard card={card} />
+) : (
+  <div class="w-full mx-auto">
+    <svg viewBox="0 0 600 840" class={`w-full h-auto ${card.disabled ? 'grayscale brightness-75 opacity-60' : ''}`} xmlns="http://www.w3.org/2000/svg">
+              <!-- Card Background -->
+
+
+              <!-- Card Border and Base -->
+              <rect x="10" y="10" width="580" height="820" rx="30" ry="30" fill="#53c4b4" />
+              <rect x="25" y="25" width="550" height="790" rx="28" ry="28" fill="#2e9794" />
+              <rect x="30" y="30" width="540" height="780" rx="24" ry="24" fill="#edeae2" />
+
+              <!-- Card Header -->
+              <clipPath id={`profileBanner_${cardId}`}>
+                <rect x="40" y="80" width="520" height="220" rx="10" ry="10"/>
+              </clipPath>
+              <image href={d.bannerPicUrl ? d.bannerPicUrl.replace("_normal", "") : "#"} x="40" y="80" width="520" height="220" clip-path={`url(#profileBanner_${cardId})`} preserveAspectRatio="xMidYMid slice" />
+
+              <!-- Name and Tier -->
+              <text x="50" y="410" font-family="Arial" font-weight="bold" font-size="28" fill="#333">{d.displayName}</text>
+
+              <text x="50" y="435" font-family="Arial" font-size="20" fill="#777">@{d.username}</text>
+
+              <!-- Tier -->
+              <text x="300" y="62" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="20" fill="#999">tpotmon.com</text>
+              <rect x="40" y="40" width="120" height="30" rx="5" ry="5" fill="#84cada" />
+              <text x="100" y="62" font-family="Arial" font-weight="bold" font-size="20" fill="black" text-anchor="middle">{d.tier.toUpperCase()}</text>
+
+              <!-- HP Bar -->
+              <rect x="420" y="40" width="140" height="30" rx="15" ry="15" fill="#ff5252" />
+              <text x="490" y="62" font-family="Arial" font-weight="bold" font-size="20" fill="white" text-anchor="middle">HP {d.hitPoints}</text>
+
+              <!-- Profile Image -->
+              <clipPath id={`profileClip_${cardId}`}>
+                <circle cx="300" cy="260" r="120" />
+              </clipPath>
+              <image href={d.profilePicUrl ? d.profilePicUrl.replace("_normal", "") : "#"} x="180" y="140" width="240" height="240" clip-path={`url(#profileClip_${cardId})`} preserveAspectRatio="xMidYMid slice" />
+              <circle cx="300" cy="260" r="120" fill="none" stroke="#ddd" stroke-width="5" />
+
+              <!-- Verified Badge (if applicable) -->
+              {d.isBlueVerified && (
+                <image href="/check.png" x="320" y="340" width="60" height="60" />
+              )}
+
+              <!-- Ability -->
+              <rect x="40" y="445" width="520" height="2" rx="10" ry="10" fill="#9a9a9a40" />
+              <text x="55" y="480" font-family="Arial" font-weight="bold" font-size="22" fill="#555">Ability: {d.abilityName}</text>
+              <foreignObject x="55" y="490" width="490" height="60">
+                <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: Arial; font-size: 16px; color: #666; line-height: 1.2; overflow-wrap: break-word;">
+                  {d.abilityDescription}
+                </div>
+              </foreignObject>
+
+              <!-- Attack -->
+              <rect x="40" y="560" width="520" height="2" rx="10" ry="10" fill="#9a9a9a40" />
+
+              <text x="55" y="605" font-family="Arial" font-weight="bold" font-size="22" fill="#333">Attack: {d.attackName}</text>
+              <text x="540" y="605" font-family="Arial" font-weight="bold" font-size="22" fill="#333" text-anchor="end">{d.attackDamage}</text>
+              <image href={attackImage} x="55" y="620" width="38" height="38" />
+              <text x="60" y="670" font-family="Arial" font-size="14" text-anchor="center" fill="#777">{d.attackType}</text>
+
+              <foreignObject x="120" y="620" width="410" height="80">
+                <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: Arial; font-size: 16px; color: #555; line-height: 1.2; overflow-wrap: break-word;">
+                  {d.attackDescription}
+                </div>
+              </foreignObject>
+
+              <!-- Line Break -->
+              <rect x="40" y="710" width="520" height="2" rx="10" ry="10" fill="#9a9a9a40" />
+
+              <!-- Weakness and Resistance -->
+              <text x="55" y="740" font-family="Arial" font-weight="bold" font-size="20" fill="#555">Weakness</text>
+              <text x="80" y="760" font-family="Arial" font-size="16" text-anchor="center" fill="#555">{d.weaknessType}</text>
+              <image href={weaknessImage} x="160" y="720" width="38" height="38" />
+              <text x="250" y="745" font-family="Arial" font-weight="bold" font-size="20" fill="#555" text-anchor="end">+{d.weaknessAmount}</text>
+
+              <!-- Weakness and Resistance -->
+              <text x="335" y="740" font-family="Arial" font-weight="bold" font-size="20" fill="#555">Resistance</text>
+              <text x="360" y="760" font-family="Arial" font-size="16" text-anchor="center" fill="#555">{d.resistType}</text>
+              <image href={resistImage} x="450" y="720" width="38" height="38" />
+              <text x="540" y="745" font-family="Arial" font-weight="bold" font-size="20" fill="#555" text-anchor="end">-{d.resistAmount}</text>
+
+              <!-- Footer -->
+              <rect x="100" y="780" width="400" height="24"  ry="6" fill="#9a9a9a60" />
+              <text x="150" y="798" font-family="Arial"  font-size="15" fill="#333">{d.rarity}</text>
+              <text x="440" y="798" font-family="Arial"  font-size="15" fill="#333" text-anchor="end">Card No. {d.id.toString().padStart(5, "0")}</text>
+              
+              <!-- Disabled Overlay -->
+              {card.disabled && (
+                <g>
+                  <rect x="30" y="30" width="540" height="780" rx="24" ry="24" fill="rgba(0,0,0,0.3)" />
+                  <text x="300" y="420" font-family="Arial" font-weight="bold" font-size="32" fill="#ff4444" text-anchor="middle">NOT AVAILABLE</text>
+                  <text x="300" y="450" font-family="Arial" font-size="18" fill="#ff4444" text-anchor="middle">IN BOOSTER PACKS</text>
+                </g>
+              )}
+
+              <!-- Stats Flair -->
+              <text x="40" y="320" font-family="Arial" font-size="14" fill="#aaa">{d.followers} followers</text>
+              <text x="560" y="320" font-family="Arial" font-size="14" fill="#aaa" text-anchor="end">{d.following} following</text>
+            </svg>
+  </div>
+)}

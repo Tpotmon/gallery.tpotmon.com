@@ -1,0 +1,10 @@
+{
+  "id": 22,
+  "title": "Bot Surge",
+  "type": "Action",
+  "effect": "Deal 5 damage to every card in play, including your own.",
+  "flavor": "Please help me recover my wallet",
+  "imageUrl": "/action-cards/bot-surge.png",
+  "rarity": "Common",
+  "inspiredBy": "https://x.com/DREAMLANDSLEEEP/status/1936810097880990061"
+}

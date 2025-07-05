@@ -1,0 +1,10 @@
+{
+  "id": 48,
+  "title": "Light Mode Flashbang",
+  "type": "Action",
+  "effect": "One opponent card is blinded and cannot attack this turn. Apply before the battle phase.",
+  "flavor": "Posted from light mode. Your eyes were not ready.",
+  "imageUrl": "/action-cards/light-mode-flashbang.png",
+  "rarity": "Uncommon",
+  "inspiredBy": "https://x.com/AIFischermann/status/1937638006409609717"
+}

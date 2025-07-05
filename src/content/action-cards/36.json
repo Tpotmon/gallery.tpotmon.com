@@ -1,0 +1,10 @@
+{
+  "id": 36,
+  "title": "Mass Reported",
+  "type": "Action",
+  "effect": "Target card loses 50% of its attack power for three turns due to being reported en masse by a cancel campaign.",
+  "flavor": "It doesn’t matter if it was deserved — the algorithm has already decided.",
+  "imageUrl": "/action-cards/mass-reported.png",
+  "rarity": "Rare",
+  "inspiredBy": "https://x.com/brangeddon/status/1911852075996307889"
+}

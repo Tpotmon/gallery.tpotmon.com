@@ -1,0 +1,9 @@
+{
+  "id": 26,
+  "title": "Who Asked?",
+  "type": "Action",
+  "effect": "Negate a passive ability this turn.",
+  "flavor": "No one. Literally no one.",
+  "imageUrl": "/action-cards/who-asked.png",
+  "rarity": "Common"
+}

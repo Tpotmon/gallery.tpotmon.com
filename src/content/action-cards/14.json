@@ -1,0 +1,10 @@
+{
+  "id": 14,
+  "title": "Yuri Posting",
+  "type": "Action",
+  "effect": "Gain +2 EP next turn. Opponent must reveal hidden action cards for 1 turn.",
+  "flavor": "No likes, no comments, just bookmarks.",
+  "imageUrl": "/action-cards/yuri-posting.png",
+  "rarity": "Common",
+  "inspiredBy": "https://x.com/KIRBARA2000/status/1936821952716607912"
+}

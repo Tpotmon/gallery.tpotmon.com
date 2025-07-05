@@ -1,0 +1,749 @@
+---
+import type { CardData } from '../stores/cardStore';
+import { createCardTexture, createFullArtCardTexture } from '../lib/cardTextureRenderer';
+
+interface Props {
+  cardData: CardData;
+  showBadges?: boolean;
+}
+
+const { cardData, showBadges = true } = Astro.props;
+---
+
+<div 
+  id={`card-container-${cardData.id}`} 
+  class={`relative w-full h-full flex justify-center items-center overflow-hidden rounded-lg ${cardData.fullArtUrl ? 'holo-card' : 'holo-card-standard'} ${cardData.holo ? 'holo-effect' : ''}`}
+  data-card-id={cardData.id}
+  data-card-data={JSON.stringify(cardData)}
+  data-holo={cardData.holo === true ? "true" : "false"}
+  data-full-art={!!cardData.fullArtUrl ? "true" : "false"}
+>
+  <canvas id={`card-canvas-${cardData.id}`} class="w-full h-full"></canvas>
+  
+  {/* Holographic overlay for full art cards - show when holo is true */}
+  {cardData.fullArtUrl && cardData.holo && (
+    <div class="absolute inset-0 pointer-events-none card-holo-overlay"></div>
+  )}
+  
+  {/* Holographic elements for standard cards - only render for holo standard cards */}
+  {!cardData.fullArtUrl && cardData.holo && (
+    <>
+      {/* Full card holographic overlay */}
+      <div class="absolute inset-0 card-holo-overlay z-5"></div>
+      
+      {/* Layer 1: Banner with reflection and holo effect */}
+      <div class="absolute banner-layer z-10">
+        {/* Banner image with reflective surface */}
+        <div class="banner-reflective-surface"></div>
+        {/* Holographic sparkle overlay */}
+        <div class="banner-holo-overlay"></div>
+      </div>
+      
+      {/* Layer 2: Profile pic border with silver reflection */}
+      <div class="absolute profile-border-layer z-20">
+        <div class="profile-border-reflective"></div>
+      </div>
+      
+      {/* Layer 3: Profile pic with reflection and holo effect */}
+      <div class="absolute profile-pic-layer z-30">
+        {/* Profile reflective surface */}
+        <div class="profile-reflective-surface"></div>
+        {/* Holographic sparkle overlay */}
+        <div class="profile-holo-overlay"></div>
+      </div>
+      
+      {/* Layer 4: Blue check with reflection (if verified) */}
+      {cardData.isBlueVerified && (
+        <div class="absolute blue-check-layer z-40">
+          <div class="blue-check-reflective"></div>
+        </div>
+      )}
+    </>
+  )}
+  
+  {showBadges && (
+    <div class="absolute top-2 right-2 flex gap-1 z-10">
+      {cardData.fullArtUrl && (
+        <div class="badge badge-primary" title="Full Art">Full Art</div>
+      )}
+      {cardData.holo && (
+        <div class="badge badge-secondary" title="Holographic">Holo</div>
+      )}
+    </div>
+  )}
+</div>
+
+<style>
+  /* Holographic card styling - Full Art version */
+  .holo-card {
+    position: relative;
+    box-shadow: 0 0 10px rgba(120, 200, 255, 0.4);
+  }
+
+  /* Standard card holographic styling (matte base with shiny elements) */
+  .holo-card-standard {
+    position: relative;
+    /* Enhanced shadow for standard holographic cards */
+    box-shadow: 0 0 10px rgba(120, 200, 255, 0.5);
+  }
+  
+  /* Subtle border effect for holographic cards */
+  .holo-effect {
+    position: relative;
+    box-shadow: 
+      0 0 12px rgba(120, 200, 255, 0.4),
+      inset 0 0 6px rgba(120, 200, 255, 0.2);
+    z-index: 1;
+  }
+  
+  /* Add a subtle animated border */
+  .holo-effect::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 0.5rem;
+    background: linear-gradient(
+      45deg,
+      rgba(255, 100, 255, 0.2) 0%,
+      rgba(120, 200, 255, 0.2) 25%,
+      rgba(100, 255, 150, 0.2) 50%,
+      rgba(255, 220, 100, 0.2) 75%,
+      rgba(255, 100, 255, 0.2) 100%
+    );
+    background-size: 400% 400%;
+    opacity: 0.5;
+    z-index: -1;
+    animation: gradient-move 8s linear infinite;
+    filter: blur(3px);
+  }
+  
+  /* Full card holographic overlay for standard cards */
+  .card-holo-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 5;
+    box-shadow: inset 0 0 20px rgba(120, 200, 255, 0.4);
+  }
+
+  /* Sparkle overlay effect for full art cards - base layer */
+  .sparkle-overlay {
+    position: relative;
+    z-index: 5;
+    border-radius: 0.375rem;
+    overflow: hidden;
+  }
+
+  /* Layer 1: Banner with holographic effect */
+  .banner-layer {
+    top: 8.5%;
+    left: 5%; 
+    width: 90%;
+    height: 26%;
+    border-radius: 10px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  
+  /* Banner reflective base layer - fully transparent */
+  .banner-reflective-surface {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+  }
+  
+  /* Banner holographic overlay */
+  .banner-holo-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(135deg, 
+      rgba(255, 220, 220, 0.2) 0%, 
+      rgba(180, 220, 255, 0.2) 25%, 
+      rgba(180, 255, 220, 0.2) 50%, 
+      rgba(220, 180, 255, 0.2) 75%, 
+      rgba(255, 220, 180, 0.2) 100%
+    );
+    background-size: 400% 400%;
+    animation: gradient-move 6s ease infinite;
+    mix-blend-mode: screen;
+  }
+  
+  /* Layer 2: Profile border with reflective effect */
+  .profile-border-layer {
+    top: 16.7%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 29%;
+    height: 29%;
+    border-radius: 50%;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  
+  /* Profile border reflective material - fully transparent */
+  .profile-border-reflective {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+  }
+  
+  /* Layer 3: Profile picture with holographic effect */
+  .profile-pic-layer {
+    top: 17%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28%;
+    height: 28%;
+    border-radius: 50%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  
+  /* Profile pic reflective base - fully transparent */
+  .profile-reflective-surface {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+  }
+  
+  /* Profile pic holographic overlay */
+  .profile-holo-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.1) 0%, 
+      rgba(255, 225, 205, 0.1) 25%, 
+      rgba(220, 200, 255, 0.1) 50%, 
+      rgba(200, 255, 220, 0.1) 75%, 
+      rgba(200, 225, 255, 0.1) 100%
+    );
+    background-size: 200% 200%;
+    animation: pulse-glow 4s ease-in-out infinite;
+    mix-blend-mode: screen;
+  }
+  
+  /* Layer 4: Blue check with reflective effect */
+  .blue-check-layer {
+    top: 34%;
+    left: 57%;
+    width: 7.14%; /* 60px/840px */
+    height: 7.14%; /* 60px/840px */
+    border-radius: 50%;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  
+  .blue-check-reflective {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+  }
+  
+  @keyframes gradient-move {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 25px rgba(255, 210, 120, 0.9);
+      filter: brightness(1.1) contrast(1.05);
+    }
+    50% {
+      box-shadow: 0 0 45px rgba(255, 210, 255, 0.95);
+      filter: brightness(1.4) contrast(1.1);
+    }
+  }
+
+  /* Adding an extra pseudo-element to enhance the outline effect */
+  .profile-outline::after {
+    content: "";
+    position: absolute;
+    top: -2%;
+    left: -2%;
+    width: 104%;
+    height: 104%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0) 46%,
+      rgba(200, 220, 255, 0.6) 48%,
+      rgba(220, 255, 255, 0.8) 50%,
+      rgba(200, 220, 255, 0.6) 52%,
+      rgba(255, 255, 255, 0) 54%
+    );
+    animation: rotate-outline-inverse 5s linear infinite;
+  }
+
+  @keyframes rotate-outline {
+    0% {
+      filter: brightness(1.0) contrast(1.2) hue-rotate(0deg);
+      transform: translateX(-50%) rotate(0deg);
+    }
+    50% {
+      filter: brightness(1.2) contrast(1.0) hue-rotate(180deg);
+      transform: translateX(-50%) rotate(180deg);
+    }
+    100% {
+      filter: brightness(1.0) contrast(1.2) hue-rotate(360deg);
+      transform: translateX(-50%) rotate(360deg);
+    }
+  }
+  
+  @keyframes rotate-outline-inverse {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(-360deg);
+    }
+  }
+  
+  @keyframes pulse-outline {
+    0%, 100% {
+      opacity: 0.9;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  /* Debug borders removed for production */
+  
+  /* Holographic effect for full card overlay - just rainbow gradient, no sparkles */
+  .card-holo-overlay::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: linear-gradient(125deg, 
+      rgba(255,0,0,0.15) 0%, 
+      rgba(255,154,0,0.15) 10%,
+      rgba(208,222,33,0.15) 20%, 
+      rgba(79,220,74,0.15) 30%, 
+      rgba(63,218,216,0.15) 40%, 
+      rgba(47,201,226,0.15) 50%, 
+      rgba(28,127,238,0.15) 60%, 
+      rgba(95,21,242,0.15) 70%,
+      rgba(186,12,248,0.15) 80%, 
+      rgba(251,7,217,0.15) 90%, 
+      rgba(255,0,0,0.15) 100%
+    );
+    background-size: 400% 400%;
+    mix-blend-mode: screen;
+    opacity: 0.9;
+    animation: gradient-move 12s linear infinite;
+    filter: contrast(1.2) saturate(1.4) brightness(1.1);
+  }
+
+  .card-holo-overlay::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: linear-gradient(45deg, 
+      rgba(255,0,0,0.08) 0%, 
+      rgba(255,154,0,0.08) 10%,
+      rgba(208,222,33,0.08) 20%, 
+      rgba(79,220,74,0.08) 30%, 
+      rgba(63,218,216,0.08) 40%, 
+      rgba(47,201,226,0.08) 50%, 
+      rgba(28,127,238,0.08) 60%, 
+      rgba(95,21,242,0.08) 70%,
+      rgba(186,12,248,0.08) 80%, 
+      rgba(251,7,217,0.08) 90%, 
+      rgba(255,0,0,0.08) 100%
+    );
+    background-size: 400% 400%;
+    mix-blend-mode: screen;
+    opacity: 0.8;
+    animation: gradient-shift 10s linear infinite;
+    filter: contrast(1.1);
+  }
+  
+  /* Rainbow particles effect for other elements */
+  .sparkle-overlay::before,
+  .banner-sparkle-overlay::before,
+  .profile-sparkle-overlay::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: 
+      /* Large rainbow particles */
+      radial-gradient(circle at 30% 20%, rgba(255,50,50,0.6) 0%, rgba(255,50,50,0) 5px),
+      radial-gradient(circle at 70% 40%, rgba(255,200,50,0.6) 0%, rgba(255,200,50,0) 4px),
+      radial-gradient(circle at 50% 60%, rgba(50,255,50,0.6) 0%, rgba(50,255,50,0) 6px),
+      radial-gradient(circle at 20% 70%, rgba(50,200,255,0.6) 0%, rgba(50,200,255,0) 5px),
+      radial-gradient(circle at 90% 80%, rgba(200,50,255,0.6) 0%, rgba(200,50,255,0) 5px),
+      /* Medium rainbow particles */
+      radial-gradient(circle at 40% 30%, rgba(255,100,100,0.5) 0%, rgba(255,100,100,0) 4px),
+      radial-gradient(circle at 10% 50%, rgba(255,255,100,0.5) 0%, rgba(255,255,100,0) 3px),
+      radial-gradient(circle at 80% 60%, rgba(100,255,100,0.5) 0%, rgba(100,255,100,0) 4px),
+      radial-gradient(circle at 60% 90%, rgba(100,100,255,0.5) 0%, rgba(100,100,255,0) 3px),
+      radial-gradient(circle at 30% 80%, rgba(255,100,255,0.5) 0%, rgba(255,100,255,0) 4px),
+      /* Small rainbow particles */
+      radial-gradient(circle at 80% 10%, rgba(255,150,150,0.4) 0%, rgba(255,150,150,0) 2px),
+      radial-gradient(circle at 20% 40%, rgba(255,255,150,0.4) 0%, rgba(255,255,150,0) 2px),
+      radial-gradient(circle at 70% 30%, rgba(150,255,150,0.4) 0%, rgba(150,255,150,0) 2px),
+      radial-gradient(circle at 10% 60%, rgba(150,150,255,0.4) 0%, rgba(150,150,255,0) 2px),
+      radial-gradient(circle at 50% 90%, rgba(255,150,255,0.4) 0%, rgba(255,150,255,0) 2px);
+    background-size: 300% 300%;
+    mix-blend-mode: screen;
+    opacity: 0.7;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  /* Increase sparkle intensity for standard card profile pic and banner */
+  .banner-sparkle-overlay::before,
+  .profile-sparkle-overlay::before {
+    opacity: 0.95; /* More visible sparkles on standard cards */
+    filter: brightness(1.2) contrast(1.2); /* Enhance visibility */
+  }
+  
+  /* Add a glow to make holographic elements more obvious */
+  .banner-sparkle-overlay,
+  .profile-sparkle-overlay {
+    box-shadow: 0 0 15px rgba(130, 220, 255, 0.3);
+  }
+  
+  /* Make the profile outline more visible */
+  .profile-outline {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    filter: brightness(1.3) drop-shadow(0 0 5px rgba(200, 220, 255, 0.8));
+  }
+
+  /* Floating animation for particles */
+  @keyframes float {
+    0%, 100% {
+      background-position: 0% 0%;
+    }
+    25% {
+      background-position: 100% 0%;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+    75% {
+      background-position: 0% 100%;
+    }
+  }
+
+  /* Additional layer with different animation timing */
+  .sparkle-overlay::after,
+  .banner-sparkle-overlay::after,
+  .profile-sparkle-overlay::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: 
+      /* Complementary rainbow particles with different positions */
+      radial-gradient(circle at 50% 10%, rgba(255,100,255,0.6) 0%, rgba(255,100,255,0) 4px),
+      radial-gradient(circle at 10% 30%, rgba(100,255,255,0.6) 0%, rgba(100,255,255,0) 3px),
+      radial-gradient(circle at 90% 50%, rgba(255,255,100,0.6) 0%, rgba(255,255,100,0) 5px),
+      radial-gradient(circle at 70% 70%, rgba(255,100,100,0.6) 0%, rgba(255,100,100,0) 4px),
+      radial-gradient(circle at 20% 90%, rgba(100,100,255,0.6) 0%, rgba(100,100,255,0) 3px);
+    background-size: 200% 200%;
+    mix-blend-mode: screen;
+    opacity: 0.7;
+    animation: float-reverse 10s ease-in-out infinite;
+  }
+
+  /* Increase sparkle intensity for standard card profile pic */
+  .profile-sparkle-overlay::after {
+    opacity: 0.85;
+  }
+
+  /* Reverse floating animation */
+  @keyframes float-reverse {
+    0%, 100% {
+      background-position: 100% 100%;
+    }
+    25% {
+      background-position: 0% 100%;
+    }
+    50% {
+      background-position: 0% 0%;
+    }
+    75% {
+      background-position: 100% 0%;
+    }
+  }
+
+  /* Add subtle rainbow overlay */
+  .sparkle-overlay::before,
+  .banner-sparkle-overlay::before,
+  .profile-sparkle-overlay::before {
+    background-blend-mode: screen;
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Rainbow gradient overlay */ 
+  .sparkle-overlay::after,
+  .banner-sparkle-overlay::after,
+  .profile-sparkle-overlay::after {
+    background-image: 
+      linear-gradient(45deg, 
+        rgba(255,0,0,0.03) 0%, 
+        rgba(255,154,0,0.03) 10%,
+        rgba(208,222,33,0.03) 20%, 
+        rgba(79,220,74,0.03) 30%, 
+        rgba(63,218,216,0.03) 40%, 
+        rgba(47,201,226,0.03) 50%, 
+        rgba(28,127,238,0.03) 60%, 
+        rgba(95,21,242,0.03) 70%,
+        rgba(186,12,248,0.03) 80%, 
+        rgba(251,7,217,0.03) 90%, 
+        rgba(255,0,0,0.03) 100%
+      ),
+      /* Rainbow particles (keeping these too) */
+      radial-gradient(circle at 50% 10%, rgba(255,100,255,0.6) 0%, rgba(255,100,255,0) 4px),
+      radial-gradient(circle at 10% 30%, rgba(100,255,255,0.6) 0%, rgba(100,255,255,0) 3px),
+      radial-gradient(circle at 90% 50%, rgba(255,255,100,0.6) 0%, rgba(255,255,100,0) 5px),
+      radial-gradient(circle at 70% 70%, rgba(255,100,100,0.6) 0%, rgba(255,100,100,0) 4px),
+      radial-gradient(circle at 20% 90%, rgba(100,100,255,0.6) 0%, rgba(100,100,255,0) 3px);
+    background-size: 400% 400%, 200% 200%;
+    animation: 
+      gradient-shift 8s linear infinite,
+      float-reverse 10s ease-in-out infinite;
+  }
+
+  /* Make the gradient effect stronger for standard card sparkles */
+  .banner-sparkle-overlay::after,
+  .profile-sparkle-overlay::after {
+    background-image: 
+      linear-gradient(45deg, 
+        rgba(255,0,0,0.05) 0%, 
+        rgba(255,154,0,0.05) 10%,
+        rgba(208,222,33,0.05) 20%, 
+        rgba(79,220,74,0.05) 30%, 
+        rgba(63,218,216,0.05) 40%, 
+        rgba(47,201,226,0.05) 50%, 
+        rgba(28,127,238,0.05) 60%, 
+        rgba(95,21,242,0.05) 70%,
+        rgba(186,12,248,0.05) 80%, 
+        rgba(251,7,217,0.05) 90%, 
+        rgba(255,0,0,0.05) 100%
+      ),
+      /* Rainbow particles (keeping these too) */
+      radial-gradient(circle at 50% 10%, rgba(255,100,255,0.7) 0%, rgba(255,100,255,0) 4px),
+      radial-gradient(circle at 10% 30%, rgba(100,255,255,0.7) 0%, rgba(100,255,255,0) 3px),
+      radial-gradient(circle at 90% 50%, rgba(255,255,100,0.7) 0%, rgba(255,255,100,0) 5px),
+      radial-gradient(circle at 70% 70%, rgba(255,100,100,0.7) 0%, rgba(255,100,100,0) 4px),
+      radial-gradient(circle at 20% 90%, rgba(100,100,255,0.7) 0%, rgba(100,100,255,0) 3px);
+  }
+
+  /* Rainbow gradient animation */
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%, 0% 0%;
+    }
+    50% {
+      background-position: 100% 50%, 50% 50%;
+    }
+    100% {
+      background-position: 0% 50%, 100% 100%;
+    }
+  }
+  
+  @keyframes sparkle-float {
+    0% {
+      background-position: 0% 0%, 0% 0%, 20% 0%, 0% 20%, 20% 20%, 0% 0%, 0% 0%;
+    }
+    100% {
+      background-position: 100% 100%, 100% 0%, 0% 100%, 100% 100%, 0% 0%, 100% 100%, 0% 100%;
+    }
+  }
+  
+  @keyframes rotate-overlay {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+</style>
+
+<script>
+  import { createCardCanvas, createFullArtCardCanvas } from "../lib/card2DRenderer.js";
+
+  // Debug function to inspect card data
+  function logCardData(cardData) {
+    console.log("CARD DATA DEBUG:", {
+      id: cardData.id,
+      holo: cardData.holo,
+      holoType: typeof cardData.holo,
+      fullArtUrl: cardData.fullArtUrl,
+      username: cardData.username,
+      isHoloBool: cardData.holo === true,
+      isHoloTruthyCheck: !!cardData.holo
+    });
+    
+    // Check if holo classes are applied correctly
+    const container = document.getElementById(`card-container-${cardData.id}`);
+    if (container) {
+      console.log("Container classes:", container.className);
+      console.log("Container data attributes:", {
+        holo: container.dataset.holo,
+        fullArt: container.dataset.fullArt
+      });
+      
+      // Check if the right class is applied based on the data
+      const hasHoloCardClass = container.classList.contains('holo-card');
+      const hasHoloCardStandardClass = container.classList.contains('holo-card-standard');
+      
+      console.log("Class check:", {
+        hasHoloCardClass,
+        hasHoloCardStandardClass,
+        shouldHaveHoloClass: cardData.holo === true && cardData.fullArtUrl,
+        shouldHaveStandardHoloClass: cardData.holo === true && !cardData.fullArtUrl
+      });
+      
+      // Check if holographic overlays exist
+      if (cardData.holo && !cardData.fullArtUrl) {
+        const bannerOverlay = container.querySelector('.banner-sparkle-overlay');
+        const profileOverlay = container.querySelector('.profile-sparkle-overlay');
+        const profileOutline = container.querySelector('.profile-outline');
+        
+        console.log("Standard holo elements found:", {
+          bannerOverlay: !!bannerOverlay,
+          profileOverlay: !!profileOverlay,
+          profileOutline: !!profileOutline
+        });
+      } else if (cardData.holo && cardData.fullArtUrl) {
+        const sparkleOverlay = container.querySelector('.sparkle-overlay');
+        console.log("Full art holo element found:", !!sparkleOverlay);
+      }
+    }
+    
+    // Try to parse the card data from localStorage
+    const localStorageCardData = localStorage.getItem('tpotmon-last-card');
+    if (localStorageCardData) {
+      try {
+        const parsedData = JSON.parse(localStorageCardData);
+        console.log("Card from localStorage:", {
+          holo: parsedData.holo,
+          fullArtUrl: parsedData.fullArtUrl
+        });
+      } catch(err) {
+        console.error("Error parsing localStorage card data:", err);
+      }
+    }
+  }
+
+  // Function to render the card asynchronously
+  async function renderCard(canvasEl, cardData) {
+    // Log card data for debugging
+    logCardData(cardData);
+    if (!canvasEl || !(canvasEl instanceof HTMLCanvasElement)) {
+      console.error("Invalid canvas element");
+      return;
+    }
+
+    try {
+      // Get the 2D context
+      const ctx = canvasEl.getContext('2d');
+      if (!ctx) {
+        console.error("Could not get 2D context from canvas");
+        return;
+      }
+
+      // Size the canvas to fit its container
+      const container = canvasEl.parentElement;
+      if (container) {
+        canvasEl.width = container.clientWidth;
+        canvasEl.height = container.clientHeight;
+      } else {
+        canvasEl.width = 600;
+        canvasEl.height = 840;
+      }
+
+      // Show loading state
+      ctx.fillStyle = "#f0f0f0";
+      ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+      ctx.fillStyle = "#999";
+      ctx.font = "16px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("Loading card...", canvasEl.width / 2, canvasEl.height / 2);
+
+      // Generate the appropriate card canvas
+      let cardCanvas;
+      if (cardData.fullArtUrl) {
+        cardCanvas = await createFullArtCardCanvas(cardData);
+      } else {
+        cardCanvas = await createCardCanvas(cardData);
+      }
+
+      // Draw the card with proper scaling to fit the canvas
+      // Maintain aspect ratio
+      const aspectRatio = 2.5/3.5; // Card aspect ratio
+      let drawWidth, drawHeight;
+      
+      if (canvasEl.width / canvasEl.height > aspectRatio) {
+        // Container is wider than the card
+        drawHeight = canvasEl.height;
+        drawWidth = drawHeight * aspectRatio;
+      } else {
+        // Container is taller than the card
+        drawWidth = canvasEl.width;
+        drawHeight = drawWidth / aspectRatio;
+      }
+      
+      // Center the card in the canvas
+      const x = (canvasEl.width - drawWidth) / 2;
+      const y = (canvasEl.height - drawHeight) / 2;
+
+      // Clear canvas and draw the card
+      ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+      ctx.drawImage(cardCanvas, x, y, drawWidth, drawHeight);
+    } catch (error) {
+      console.error("Error rendering card:", error);
+      
+      // Show error state
+      const ctx = canvasEl.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = "#f0f0f0";
+        ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+        ctx.fillStyle = "red";
+        ctx.font = "14px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("Error rendering card", canvasEl.width / 2, canvasEl.height / 2);
+      }
+    }
+  }
+
+  // Initialize all cards when the DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    // Find all card containers
+    document.querySelectorAll('[data-card-id]').forEach(container => {
+      const cardId = container.getAttribute('data-card-id');
+      const cardDataStr = container.getAttribute('data-card-data');
+      
+      if (cardId && cardDataStr) {
+        try {
+          const cardData = JSON.parse(cardDataStr);
+          const canvasEl = document.getElementById(`card-canvas-${cardId}`);
+          if (canvasEl) {
+            renderCard(canvasEl, cardData);
+          }
+        } catch (error) {
+          console.error("Error initializing card renderer:", error);
+        }
+      }
+    });
+  });
+</script>

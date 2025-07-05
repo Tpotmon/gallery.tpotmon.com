@@ -1,0 +1,274 @@
+---
+import { getCollection } from "astro:content";
+import SimpleLayout from "../../layouts/SimpleLayout.astro";
+import GalleryCard from "../../components/GalleryCard.astro";
+import ActionCard from "../../components/ActionCard.astro";
+
+export async function getStaticPaths() {
+    const allCards = await getCollection("cards");
+    const allActionCards = await getCollection("action-cards");
+    
+    const characterCardPaths = allCards.map((card) => ({
+        params: { id: card.data.id.toString() },
+        props: { card: card, cardType: "character" },
+    }));
+    
+    const actionCardPaths = allActionCards.map((card) => ({
+        params: { id: `action-${card.data.id}` },
+        props: { card: card, cardType: "action" },
+    }));
+    
+    return [...characterCardPaths, ...actionCardPaths];
+}
+
+const { card, cardType } = Astro.props;
+
+const allCards = await getCollection("cards");
+const allActionCards = await getCollection("action-cards");
+const sortedCards = allCards.sort((a, b) => a.data.id - b.data.id);
+const sortedActionCards = allActionCards.sort((a, b) => a.data.id - b.data.id);
+
+// Combine and sort all cards for navigation
+const allCardsForNav = [
+    ...sortedCards.map(c => ({ ...c, cardType: "character", navId: c.data.id.toString() })),
+    ...sortedActionCards.map(c => ({ ...c, cardType: "action", navId: `action-${c.data.id}` }))
+].sort((a, b) => {
+    if (a.cardType === "character" && b.cardType === "action") return -1;
+    if (a.cardType === "action" && b.cardType === "character") return 1;
+    if (a.cardType === "character" && b.cardType === "character") return a.data.id - b.data.id;
+    if (a.cardType === "action" && b.cardType === "action") return a.data.id - b.data.id;
+    return 0;
+});
+
+// Get current card and navigation
+const currentCardId = Astro.params.id;
+const currentIndex = allCardsForNav.findIndex(c => c.navId === currentCardId);
+const currentCard = allCardsForNav[currentIndex];
+const prevCard = currentIndex > 0 ? allCardsForNav[currentIndex - 1] : null;
+const nextCard = currentIndex < allCardsForNav.length - 1 ? allCardsForNav[currentIndex + 1] : null;
+
+// Prepare social media meta data
+const cardName = currentCard.cardType === "character" ? currentCard.data.displayName : currentCard.data.title;
+const baseDescription = currentCard.cardType === "character" 
+  ? `${currentCard.data.tier} tier character card - ${currentCard.data.abilityDescription}`
+  : `Action card - ${currentCard.data.effect}`;
+const cardDescription = baseDescription.length > 160 ? baseDescription.substring(0, 157) + "..." : baseDescription;
+const socialImageUrl = new URL(`/social-images/${currentCardId}.png`, Astro.url).toString();
+---
+
+<SimpleLayout 
+    title={`${cardName} - TPOTMon Card`}
+    description={cardDescription}
+    ogImage={socialImageUrl}
+    ogType="article"
+>
+    <div class="container mx-auto px-4 py-8">
+        <!-- Breadcrumbs -->
+        <div class="breadcrumbs text-sm mb-6">
+            <ul>
+                <li><a href="/gallery" class="link link-hover">Gallery</a></li>
+                <li>{currentCard.cardType === "character" ? currentCard.data.displayName : currentCard.data.title}</li>
+            </ul>
+        </div>
+
+        <!-- Main Card Display -->
+        <div class="card bg-base-100 shadow-xl mb-8">
+            <div class="card-body">
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <!-- Card Image -->
+                    <div class="lg:w-1/2">
+                        <div class="max-w-lg mx-auto">
+                            {currentCard.cardType === "character" ? (
+                                <GalleryCard card={{...currentCard.data, cardType: currentCard.data.cardType}} />
+                            ) : (
+                                <ActionCard card={currentCard.data} />
+                            )}
+                        </div>
+                    </div>
+                    
+                    <!-- Card Details -->
+                    <div class="lg:w-1/2 space-y-6">
+                        {currentCard.cardType === "character" ? (
+                            <>
+                                <!-- Character Card Details -->
+                                <div>
+                                    <h1 class="text-4xl font-bold text-base-content">{currentCard.data.displayName}</h1>
+                                    <p class="text-xl text-base-content/70 mb-4">@{currentCard.data.username}</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <div class="badge badge-primary badge-lg">
+                                            {currentCard.data.tier.toUpperCase()}
+                                        </div>
+                                        <div class="badge badge-secondary badge-lg">
+                                            {currentCard.data.rarity}
+                                        </div>
+                                        {currentCard.data.holo && (
+                                            <div class="badge badge-warning badge-lg">
+                                                ✨ Holographic
+                                            </div>
+                                        )}
+                                        {currentCard.data.isBlueVerified && (
+                                            <div class="badge badge-info badge-lg">
+                                                ✓ Verified
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <!-- Stats Grid -->
+                                <div class="stats shadow">
+                                    <div class="stat">
+                                        <div class="stat-title">HP</div>
+                                        <div class="stat-value text-error">{currentCard.data.hitPoints}</div>
+                                    </div>
+                                    <div class="stat">
+                                        <div class="stat-title">Attack Damage</div>
+                                        <div class="stat-value text-primary">{currentCard.data.attackDamage}</div>
+                                    </div>
+                                </div>
+
+                                <!-- Ability Section -->
+                                <div class="card bg-base-200">
+                                    <div class="card-body">
+                                        <h3 class="card-title text-lg">Ability: {currentCard.data.abilityName}</h3>
+                                        <p class="text-base-content/80">{currentCard.data.abilityDescription}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Attack Section -->
+                                <div class="card bg-base-200">
+                                    <div class="card-body">
+                                        <h3 class="card-title text-lg">Attack: {currentCard.data.attackName}</h3>
+                                        <p class="text-base-content/80">{currentCard.data.attackDescription}</p>
+                                        <div class="badge badge-outline">Type: {currentCard.data.attackType}</div>
+                                    </div>
+                                </div>
+
+                                <!-- Weakness & Resistance -->
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="card bg-error/10">
+                                        <div class="card-body p-4">
+                                            <h4 class="font-semibold text-error">Weakness</h4>
+                                            <p class="text-base-content">{currentCard.data.weaknessType} (+{currentCard.data.weaknessAmount})</p>
+                                        </div>
+                                    </div>
+                                    <div class="card bg-success/10">
+                                        <div class="card-body p-4">
+                                            <h4 class="font-semibold text-success">Resistance</h4>
+                                            <p class="text-base-content">{currentCard.data.resistType} (-{currentCard.data.resistAmount})</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Social Stats -->
+                                <div class="card bg-base-200">
+                                    <div class="card-body">
+                                        <h4 class="card-title text-base">Social Stats</h4>
+                                        <div class="stats">
+                                            <div class="stat p-2">
+                                                <div class="stat-title text-xs">Followers</div>
+                                                <div class="stat-value text-sm">{currentCard.data.followers.toLocaleString()}</div>
+                                            </div>
+                                            <div class="stat p-2">
+                                                <div class="stat-title text-xs">Following</div>
+                                                <div class="stat-value text-sm">{currentCard.data.following.toLocaleString()}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card Analysis -->
+                                <div class="card bg-base-200">
+                                    <div class="card-body">
+                                        <h4 class="card-title text-base">Card Analysis</h4>
+                                        <p class="text-base-content/80 leading-relaxed">{currentCard.data.description}</p>
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <!-- Action Card Details -->
+                                <div>
+                                    <h1 class="text-4xl font-bold text-base-content">{currentCard.data.title}</h1>
+                                    <p class="text-xl text-base-content/70 mb-4">{currentCard.data.type} Card</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <div class="badge badge-warning badge-lg">
+                                            Action Card
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Effect Section -->
+                                <div class="card bg-base-200">
+                                    <div class="card-body">
+                                        <h3 class="card-title text-lg">Effect</h3>
+                                        <p class="text-base-content/80 leading-relaxed">{currentCard.data.effect}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Flavor Text Section -->
+                                <div class="card bg-base-200">
+                                    <div class="card-body">
+                                        <h3 class="card-title text-lg">Flavor Text</h3>
+                                        <p class="text-base-content/80 italic leading-relaxed">"{currentCard.data.flavor}"</p>
+                                    </div>
+                                </div>
+
+                                <!-- Card Info -->
+                                <div class="card bg-base-200">
+                                    <div class="card-body">
+                                        <h4 class="card-title text-base">Card Information</h4>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <div class="text-sm text-base-content/70">Card Type</div>
+                                                <div class="font-semibold">{currentCard.data.type}</div>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm text-base-content/70">Card Number</div>
+                                                <div class="font-semibold">#{currentCard.data.id.toString().padStart(3, "0")}</div>
+                                            </div>
+                                        </div>
+                                        {currentCard.data.inspiredBy && (
+                                            <div class="mt-4">
+                                                <div class="text-sm text-base-content/70">Inspired by</div>
+                                                <a href={currentCard.data.inspiredBy} target="_blank" rel="noopener noreferrer" class="link link-primary font-semibold">
+                                                    {currentCard.data.inspiredBy}
+                                                </a>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center">
+            {prevCard ? (
+                <a href={`/gallery/${prevCard.navId}`} class="btn btn-outline">
+                    <span>←</span>
+                    <div class="text-left ml-2">
+                        <div class="text-xs opacity-70">Previous</div>
+                        <div class="font-medium">{prevCard.cardType === "character" ? prevCard.data.displayName : prevCard.data.title}</div>
+                    </div>
+                </a>
+            ) : (
+                <div></div>
+            )}
+
+            {nextCard ? (
+                <a href={`/gallery/${nextCard.navId}`} class="btn btn-outline">
+                    <div class="text-right mr-2">
+                        <div class="text-xs opacity-70">Next</div>
+                        <div class="font-medium">{nextCard.cardType === "character" ? nextCard.data.displayName : nextCard.data.title}</div>
+                    </div>
+                    <span>→</span>
+                </a>
+            ) : (
+                <div></div>
+            )}
+        </div>
+    </div>
+</SimpleLayout>

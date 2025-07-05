@@ -1,0 +1,9 @@
+{
+  "id": 2,
+  "title": "Tier List",
+  "type": "Action",
+  "effect": "Bait moots into commenting. Gain 1 EP for each unique comment.",
+  "flavor": "S-tier engagement farming.",
+  "imageUrl": "/action-cards/tier-list.png",
+  "rarity": "Common"
+}

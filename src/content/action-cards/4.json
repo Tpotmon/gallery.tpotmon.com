@@ -1,0 +1,10 @@
+{
+  "id": 4,
+  "title": "X Jail",
+  "type": "Action",
+  "effect": "Target card cannot follow, like, or bookmark for 3 turns.",
+  "flavor": "Violation of community standards.",
+  "imageUrl": "/action-cards/x-jail.png",
+  "rarity": "Common",
+  "inspriredBy": "https://x.com/ThinkWiselyMatt/status/1936853464316789096"
+}

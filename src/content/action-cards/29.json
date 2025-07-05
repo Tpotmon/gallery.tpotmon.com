@@ -1,0 +1,9 @@
+{
+  "id": 29,
+  "title": "Locked In",
+  "type": "Action",
+  "effect": "This card can attack twice next turn. If it attacks twice, it cannot act the following turn.",
+  "flavor": "Tunnel vision. No distractions. Only posts.",
+  "imageUrl": "/action-cards/locked-in.png",
+  "rarity": "Uncommon"
+}

@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "title": "Muted!!!!",
+  "type": "Action",
+  "effect": "Select an opponent's card and a card on your field. The opponent's selected card cannot attack your selected card.",
+  "flavor": "Muted and moved on.",
+  "imageUrl": "/action-cards/muted.png",
+  "rarity": "Common",
+  "inspiredBy": "https://x.com/WagieWeeb/status/1935559903701078297"
+}

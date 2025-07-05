@@ -1,0 +1,9 @@
+{
+  "id": 24,
+  "title": "Replied to Elon",
+  "type": "Action",
+  "effect": "Flip a coin. Heads: draw 2 cards. Tails: discard your hand.",
+  "flavor": "Elon liked your post. For real. RIP.",
+  "imageUrl": "/action-cards/replied-to-elon.png",
+  "rarity": "Common"
+}

@@ -1,0 +1,10 @@
+{
+  "id": 6,
+  "title": "Post Startup Idea",
+  "type": "Action",
+  "effect": "Deal 10 damage. If opponent has more followers, deal +10.",
+  "flavor": "What if dogs had LinkedIn?",
+  "imageUrl": "/action-cards/post-startup-idea.png",
+  "rarity": "Common",
+  "inspriredBy": "https://x.com/search?q=from%3Adjcows%20%22startup%20idea%22%20-filter%3Areplies&f=live&src=typed_query"
+}

@@ -1,0 +1,10 @@
+{
+  "id": 25,
+  "title": "Hot Take",
+  "type": "Action",
+  "effect": "Choose: gain +30 attack this turn, or lose 20 HP permanently.",
+  "flavor": "Everyone's mad, but you're trending.",
+  "imageUrl": "/action-cards/hot-take.png",
+  "rarity": "Common",
+  "inspiredBy": "https://x.com/DREAMLANDSLEEEP/status/1936819894944715179"
+}

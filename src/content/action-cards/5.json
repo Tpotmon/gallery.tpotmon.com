@@ -1,0 +1,10 @@
+{
+  "id": 5,
+  "title": "Fired from Job",
+  "type": "Action",
+  "effect": "This card can attack twice in one turn.",
+  "flavor": "No boss. No filter.",
+  "imageUrl": "/action-cards/fired-from-job.png",
+  "rarity": "Common",
+  "inspiredBy": "https://x.com/yacineMTB/status/1937535195944747341"
+}

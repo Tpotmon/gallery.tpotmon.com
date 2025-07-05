@@ -1,0 +1,9 @@
+{
+  "id": 37,
+  "title": "Rate Limited",
+  "type": "Action",
+  "effect": "Target one User Account card. That card cannot attack or use abilities during its next turn due to excessive posting.",
+  "flavor": "Maybe touch some grass… or just wait 15 minutes.",
+  "imageUrl": "/action-cards/rate-limited.png",
+  "rarity": "Common"
+}

@@ -1,0 +1,9 @@
+{
+  "id": 10,
+  "title": "How My Email Finds You",
+  "type": "Action",
+  "effect": "Draw 1 card. If card is an action, play it immediately.",
+  "flavor": "I hope this message finds you well...",
+  "imageUrl": "/action-cards/how-my-email-finds-you.png",
+  "rarity": "Common"
+}

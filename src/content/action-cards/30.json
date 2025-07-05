@@ -1,0 +1,9 @@
+{
+  "id": 30,
+  "title": "Monk Mode",
+  "type": "Action",
+  "effect": "Skip your next turn. Restore 20 HP and draw 1 card.",
+  "flavor": "You logged out to log in.",
+  "imageUrl": "/action-cards/monk-mode.png",
+  "rarity": "Rare"
+}

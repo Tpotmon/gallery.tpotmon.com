@@ -1,0 +1,9 @@
+{
+  "id": 19,
+  "title": "Delete Tweet",
+  "type": "Action",
+  "effect": "Cancel the last action or ability played this turn.",
+  "flavor": "Wasn't even that deep.",
+  "imageUrl": "/action-cards/delete-tweet.png",
+  "rarity": "Common"
+}

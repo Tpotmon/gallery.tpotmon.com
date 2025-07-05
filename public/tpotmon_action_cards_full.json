@@ -1,0 +1,170 @@
+[
+  {
+    "title": "Tweet Not Sent",
+    "type": "Action",
+    "effect": "Negate an attack from a Highbie or lower due to phone connection issues.",
+    "flavor": "The tweet was a banger... in another timeline."
+  },
+  {
+    "title": "Muted!!!!",
+    "type": "Action",
+    "effect": "Select an opponent's card and a card on your field. The opponent's selected card cannot attack your selected card.",
+    "flavor": "Muted and moved on."
+  },
+  {
+    "title": "Tier List",
+    "type": "Action",
+    "effect": "Bait moots into commenting. Gain 1 EP for each unique comment.",
+    "flavor": "S-tier engagement farming."
+  },
+  {
+    "title": "Gifted Premium",
+    "type": "Action",
+    "effect": "Lowbie gains permanent +10 attack.",
+    "flavor": "Thanks mysterious benefactor."
+  },
+  {
+    "title": "X Jail",
+    "type": "Action",
+    "effect": "Target card cannot follow, like, or bookmark for 3 turns.",
+    "flavor": "Violation of community standards."
+  },
+  {
+    "title": "Fired from Job",
+    "type": "Action",
+    "effect": "This card can attack twice in one turn.",
+    "flavor": "No boss. No filter."
+  },
+  {
+    "title": "Post Startup Idea",
+    "type": "Action",
+    "effect": "Deal 10 damage. If opponent has more followers, deal +10.",
+    "flavor": "\u201cWhat if dogs had LinkedIn?\u201d"
+  },
+  {
+    "title": "Face Dox Fail",
+    "type": "Action",
+    "effect": "No effect. Just awkward silence.",
+    "flavor": "This is who you were arguing with."
+  },
+  {
+    "title": "RAGE BAIT",
+    "type": "Action",
+    "effect": "Deal +20 damage, but take 20 self-damage.",
+    "flavor": "You knew what you were doing."
+  },
+  {
+    "title": "Horny Jail",
+    "type": "Action",
+    "effect": "Card cannot attack next turn. Distracted by browsing.",
+    "flavor": "Bonk."
+  },
+  {
+    "title": "How My Email Finds You",
+    "type": "Action",
+    "effect": "Draw 1 card. If card is an action, play it immediately.",
+    "flavor": "I hope this message finds you well..."
+  },
+  {
+    "title": "Spam Filtered",
+    "type": "Action",
+    "effect": "Negate an attack or action that failed to go through.",
+    "flavor": "No notifications received."
+  },
+  {
+    "title": "Monitoring the Situation",
+    "type": "Action",
+    "effect": "Nothing happens this turn.",
+    "flavor": "We\u2019re watching very closely."
+  },
+  {
+    "title": "Nothing Ever Happens",
+    "type": "Action",
+    "effect": "Cancel the effect of another action, attack, or ability.",
+    "flavor": "As expected."
+  },
+  {
+    "title": "Yuri Posting",
+    "type": "Action",
+    "effect": "Gain +2 EP next turn. Opponent must reveal hidden action cards for 1 turn.",
+    "flavor": "No likes, no comments, just bookmarks."
+  },
+  {
+    "title": "GOONING TIME",
+    "type": "Action",
+    "effect": "Skip your next attack phase due to excessive distraction. Recover 5 HP.",
+    "flavor": "The timeline is dangerous tonight."
+  },
+  {
+    "title": "Shadowbanned",
+    "type": "Action",
+    "effect": "Target card cannot attack or be targeted for 3 turns.",
+    "flavor": "You're shouting into the void, sweetie."
+  },
+  {
+    "title": "Ratio Failed",
+    "type": "Action",
+    "effect": "Your attack deals 0 damage and you lose 10 HP.",
+    "flavor": "They had time today."
+  },
+  {
+    "title": "Alt Account",
+    "type": "Action",
+    "effect": "Revive one canceled or banned card with half HP.",
+    "flavor": "I\u2019m back and worse."
+  },
+  {
+    "title": "Delete Tweet",
+    "type": "Action",
+    "effect": "Cancel the last action or ability played this turn.",
+    "flavor": "Wasn\u2019t even that deep."
+  },
+  {
+    "title": "Community Notes",
+    "type": "Action",
+    "effect": "Opponent\u2019s next attack deals half damage.",
+    "flavor": "Readers added context..."
+  },
+  {
+    "title": "Scrolling Doom",
+    "type": "Action",
+    "effect": "Skip your own attack phase. Opponent skips their next turn.",
+    "flavor": "Just one more video..."
+  },
+  {
+    "title": "Bot Surge",
+    "type": "Action",
+    "effect": "Deal 5 damage to every card in play, including your own.",
+    "flavor": "Engagement is engagement."
+  },
+  {
+    "title": "Scheduled Post",
+    "type": "Action",
+    "effect": "Play an action card from your hand at the start of the next turn.",
+    "flavor": "Set it and forget it."
+  },
+  {
+    "title": "Replied to Elon",
+    "type": "Action",
+    "effect": "Flip a coin. Heads: draw 2 cards. Tails: discard your hand.",
+    "flavor": "Elon liked your post. For real. RIP."
+  },
+  {
+    "title": "Hot Take",
+    "type": "Action",
+    "effect": "Choose: gain +30 attack this turn, or lose 20 HP permanently.",
+    "flavor": "Everyone\u2019s mad, but you're trending."
+  },
+  {
+    "title": "Who Asked?",
+    "type": "Action",
+    "effect": "Negate a passive ability this turn.",
+    "flavor": "No one. Literally no one."
+  },
+  {
+    "title": "Threads User Detected",
+    "type": "Action",
+    "effect": "Force a player to discard their highest-tier card.",
+    "flavor": "Don\u2019t worry, they\u2019re not coming back."
+  }
+]

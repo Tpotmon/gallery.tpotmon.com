@@ -1,0 +1,10 @@
+{
+  "id": 18,
+  "title": "Alt Account",
+  "type": "Action",
+  "effect": "Revive one canceled or banned card with half HP.",
+  "flavor": "I'm back and worse.",
+  "imageUrl": "/action-cards/alt-account.png",
+  "rarity": "Common",
+  "inspiredBy": "https://x.com/DREAMLANDSLEEEP"
+}

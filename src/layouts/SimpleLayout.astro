@@ -1,0 +1,64 @@
+---
+import "../assets/app.css";
+import "../assets/z-index-fixes.css";
+
+export interface Props {
+    title?: string;
+    description?: string;
+    ogImage?: string;
+    ogType?: string;
+}
+
+const { 
+    title = "TPOTMon", 
+    description = "TPOTMon Card Gallery",
+    ogImage,
+    ogType = "website"
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="h-full">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content={description} />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/png" href="/slime.png" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title}</title>
+        
+        <!-- Open Graph Meta Tags -->
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content={ogType} />
+        <meta property="og:url" content={Astro.url} />
+        {ogImage && <meta property="og:image" content={ogImage} />}
+        {ogImage && <meta property="og:image:width" content="1200" />}
+        {ogImage && <meta property="og:image:height" content="630" />}
+        
+        <!-- Twitter Card Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        {ogImage && <meta name="twitter:image" content={ogImage} />}
+    </head>
+    <body class="min-h-screen bg-base-200">
+        <!-- Simple Navbar -->
+        <div class="navbar bg-base-100 shadow-sm">
+            <div class="navbar-start">
+                <a href="/" class="btn btn-ghost text-xl">TPOTMon</a>
+            </div>
+            <div class="navbar-center">
+                <a href="/gallery" class="btn btn-ghost">Gallery</a>
+            </div>
+            <div class="navbar-end">
+                <!-- Empty for now -->
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <main>
+            <slot />
+        </main>
+    </body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "id": 42,
+  "title": "Lowbies create, Highbies reap",
+  "type": "Action",
+  "effect": "Activate when a Lowbie card is attacked. Your Highbie card takes no damage until the end of this turn.",
+  "flavor": "A Lowbie’s job is to defend the people who matter.",
+  "imageUrl": "/action-cards/lowbies-create-highbies-reap.png",
+  "rarity": "Uncommon",
+  "inspiredBy": "https://x.com/0xIlyy/status/1872481871957033353"
+}

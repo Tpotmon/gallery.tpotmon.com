@@ -1,11 +1,62 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { getCollection } from "astro:content";
+import SimpleLayout from "../layouts/SimpleLayout.astro";
+import GalleryWithSearch from "../components/GalleryWithSearch";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const allCards = await getCollection("cards");
+const allActionCards = await getCollection("action-cards");
+const sortedCards = allCards.sort((a, b) => a.data.id - b.data.id);
+const sortedActionCards = allActionCards.sort((a, b) => a.data.id - b.data.id);
+
+// Transform cards for the search component (include search fields + full data)
+const cardsForSearch = sortedCards.map(card => ({
+    // Search fields
+    id: card.data.id,
+    displayName: card.data.displayName,
+    username: card.data.username,
+    tier: card.data.tier,
+    rarity: card.data.rarity,
+    abilityName: card.data.abilityName,
+    attackName: card.data.attackName,
+    cardType: "character", // This is for search filtering (character vs action)
+    // Full card data for rendering (preserves internal cardType: "normal" vs "fullArt")
+    fullData: card.data,
+}));
+
+// Transform action cards for the search component
+const actionCardsForSearch = sortedActionCards.map(card => ({
+    // Search fields
+    id: `action-${card.data.id}`,
+    displayName: card.data.title,
+    username: "",
+    tier: "",
+    rarity: card.data.rarity,
+    abilityName: "",
+    attackName: "",
+    cardType: "action",
+    // Full card data for rendering
+    fullData: card.data,
+}));
+
+// Combine both card types
+const allCardsForSearch = [...cardsForSearch, ...actionCardsForSearch];
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<SimpleLayout title="Card Gallery - TPOTMon">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="hero bg-base-100 rounded-box mb-8">
+            <div class="hero-content text-center">
+                <div class="max-w-md">
+                    <h1 class="text-5xl font-bold text-base-content">Card Gallery</h1>
+                    <p class="py-6 text-base-content/70">
+                        Browse all {sortedCards.length} character cards and {sortedActionCards.length} action cards
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery with Search -->
+        <GalleryWithSearch client:load allCards={allCardsForSearch} cardsPerPage={12} />
+    </div>
+</SimpleLayout>

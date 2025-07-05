@@ -1,0 +1,131 @@
+{
+  "$ref": "#/definitions/cards",
+  "definitions": {
+    "cards": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "isBlueVerified": {
+          "type": "boolean"
+        },
+        "followers": {
+          "type": "number"
+        },
+        "following": {
+          "type": "number"
+        },
+        "hitPoints": {
+          "type": "number"
+        },
+        "profilePicUrl": {
+          "type": "string"
+        },
+        "bannerPicUrl": {
+          "type": "string"
+        },
+        "fullArtUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "cardType": {
+          "type": "string",
+          "enum": [
+            "normal",
+            "fullArt"
+          ]
+        },
+        "tier": {
+          "type": "string"
+        },
+        "abilityName": {
+          "type": "string"
+        },
+        "abilityDescription": {
+          "type": "string"
+        },
+        "attackName": {
+          "type": "string"
+        },
+        "attackDescription": {
+          "type": "string"
+        },
+        "attackType": {
+          "type": "string"
+        },
+        "attackDamage": {
+          "type": "number"
+        },
+        "weaknessType": {
+          "type": "string"
+        },
+        "weaknessAmount": {
+          "type": "number"
+        },
+        "resistType": {
+          "type": "string"
+        },
+        "resistAmount": {
+          "type": "number"
+        },
+        "description": {
+          "type": "string"
+        },
+        "rarity": {
+          "type": "string"
+        },
+        "holo": {
+          "type": "boolean"
+        },
+        "xId": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "displayName",
+        "username",
+        "isBlueVerified",
+        "followers",
+        "following",
+        "hitPoints",
+        "profilePicUrl",
+        "bannerPicUrl",
+        "fullArtUrl",
+        "cardType",
+        "tier",
+        "abilityName",
+        "abilityDescription",
+        "attackName",
+        "attackDescription",
+        "attackType",
+        "attackDamage",
+        "weaknessType",
+        "weaknessAmount",
+        "resistType",
+        "resistAmount",
+        "description",
+        "rarity",
+        "holo",
+        "xId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

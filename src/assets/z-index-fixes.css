@@ -1,0 +1,31 @@
+/* Z-index fixes for the application */
+
+/* Make tooltips appear above everything else */
+.tooltip::before,
+.tooltip::after {
+  z-index: 10000 !important;
+}
+
+/* Fix for dropdown menus */
+.dropdown .dropdown-content {
+  z-index: 10000 !important;
+}
+
+/* Fix for share button interactions */
+#share-button,
+#info-button {
+  isolation: isolate;
+  z-index: 50 !important;
+}
+
+/* This ensures the navbar stays above other elements */
+header {
+  position: relative;
+  z-index: 9000 !important;
+}
+
+/* Ensure dropdown is positioned correctly */
+.dropdown {
+  position: relative !important;
+  isolation: isolate;
+}

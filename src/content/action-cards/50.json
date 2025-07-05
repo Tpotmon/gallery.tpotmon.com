@@ -1,0 +1,10 @@
+{
+  "id": 50,
+  "title": "BAITED!!!",
+  "type": "Action",
+  "effect": "Declare one of your User Account Cards as the bait. Until the end of your opponent’s next turn, all attacks must target that card if possible.",
+  "flavor": "They thought it was weak. It was bait.",
+  "imageUrl": "/action-cards/baited.png",
+  "rarity": "Uncommon",
+  "inspiredBy": "https://x.com/tolly_xyz/status/1937579120176533880"
+}

@@ -1,0 +1,9 @@
+{
+  "id": 44,
+  "title": "Keyword Hit",
+  "type": "Action",
+  "effect": "Your next attack gains +20 damage. Your tweet hit a trending keyword and got caught in the algo wave.",
+  "flavor": "You weren't even trying.",
+  "imageUrl": "/action-cards/keyword-hit.png",
+  "rarity": "Uncommon"
+}

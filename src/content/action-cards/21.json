@@ -1,0 +1,9 @@
+{
+  "id": 21,
+  "title": "Scrolling Doom",
+  "type": "Action",
+  "effect": "Skip your own attack phase. Opponent skips their next turn.",
+  "flavor": "Just one more video...",
+  "imageUrl": "/action-cards/scrolling-doom.png",
+  "rarity": "Common"
+}

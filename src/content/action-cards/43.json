@@ -1,0 +1,9 @@
+{
+  "id": 43,
+  "title": "PFP Change",
+  "type": "Action",
+  "effect": "Lose 1 action point next turn. User updates their pfp, and now no one has any idea who they are.",
+  "flavor": "Wait... who is this?",
+  "imageUrl": "/action-cards/pfp-change.png",
+  "rarity": "Common"
+}

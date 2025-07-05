@@ -1,0 +1,9 @@
+{
+  "id": 16,
+  "title": "Shadowbanned",
+  "type": "Action",
+  "effect": "Target card cannot attack or be targeted for 3 turns.",
+  "flavor": "You're shouting into the void, sweetie.",
+  "imageUrl": "/action-cards/shadowbanned.png",
+  "rarity": "Common"
+}

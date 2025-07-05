@@ -1,0 +1,9 @@
+{
+  "id": 17,
+  "title": "Ratio Failed",
+  "type": "Action",
+  "effect": "Your attack deals 0 damage and you lose 10 HP.",
+  "flavor": "They had time today.",
+  "imageUrl": "/action-cards/ratio-failed.png",
+  "rarity": "Common"
+}

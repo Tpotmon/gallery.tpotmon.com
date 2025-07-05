@@ -1,0 +1,9 @@
+{
+  "id": 47,
+  "title": "Account Recovered",
+  "type": "Action",
+  "effect": "Contacting support actually did something. Restore 1 card from the ban-yard to your hand.",
+  "flavor": "They responded... and it wasn't a bot.",
+  "imageUrl": "/action-cards/account-recovered.png",
+  "rarity": "Rare"
+}

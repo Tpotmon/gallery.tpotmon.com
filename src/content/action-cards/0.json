@@ -1,0 +1,10 @@
+{
+  "id": 0,
+  "title": "Tweet Not Sent",
+  "type": "Action",
+  "effect": "Negate an attack from a Highbie or lower due to phone connection issues.",
+  "flavor": "The tweet was a banger... in another timeline.",
+  "imageUrl": "/action-cards/tweet-not-sent.png",
+  "rarity": "Common",
+  "inspiredBy": "https://x.com/Oxymoron290/status/1936841276751585366"
+}

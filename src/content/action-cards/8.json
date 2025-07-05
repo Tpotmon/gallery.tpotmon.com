@@ -1,0 +1,10 @@
+{
+  "id": 8,
+  "title": "RAGE BAIT",
+  "type": "Action",
+  "effect": "Deal +20 damage, but take 20 self-damage.",
+  "flavor": "You knew what you were doing.",
+  "imageUrl": "/action-cards/rage-bait.png",
+  "rarity": "Common",
+  "inspiredBy": "https://x.com/googoogreg04729/status/1936929325393314274"
+}

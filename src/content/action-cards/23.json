@@ -1,0 +1,10 @@
+{
+  "id": 23,
+  "title": "Scheduled Post",
+  "type": "Action",
+  "effect": "Play an action card from your hand at the start of the next turn.",
+  "flavor": "Set it and forget it.",
+  "imageUrl": "/action-cards/scheduled-post.png",
+  "rarity": "Common",
+  "inspiredBy": "https://x.com/WagieWeeb/status/1936132003595759667"
+}

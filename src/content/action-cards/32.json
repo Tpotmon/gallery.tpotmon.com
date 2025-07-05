@@ -1,0 +1,10 @@
+{
+  "id": 32,
+  "title": "Twitter Virus",
+  "type": "Action",
+  "effect": "Mark a card as infected. Each time it replies or engages, there’s a 1 in 3 chance the engaging card becomes infected too. Infected cards have their attacks negated.",
+  "flavor": "It started with a single reply. Now the timeline is unusable.",
+  "imageUrl": "/action-cards/twitter-virus.png",
+  "rarity": "Rare",
+  "inspiredBy": "https://x.com/secemp9/status/1912870266666996064"
+}

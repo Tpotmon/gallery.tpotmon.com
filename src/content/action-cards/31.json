@@ -1,0 +1,9 @@
+{
+  "id": 31,
+  "title": "Copium",
+  "type": "Action",
+  "effect": "Restore 10 HP. Gain no EP next turn.",
+  "flavor": "You didn’t lose. You’re just misunderstood.",
+  "imageUrl": "/action-cards/copium.png",
+  "rarity": "Common"
+}

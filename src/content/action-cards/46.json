@@ -1,0 +1,11 @@
+{
+  "id": 46,
+  "title": "Account Locked",
+  "type": "Action",
+  "effect": "Target card remains on the field but cannot attack for the rest of the game.",
+  "flavor": "No email. No appeal. Just vibes.",
+  "imageUrl": "/action-cards/account-locked.png",
+  "rarity": "Uncommon",
+  "inspiredBy": "https://x.com/_eosyn/status/1937571354171130227"
+}
+

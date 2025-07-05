@@ -1,0 +1,9 @@
+{
+  "id": 3,
+  "title": "Gifted Premium",
+  "type": "Action",
+  "effect": "Lowbie gains permanent +10 attack.",
+  "flavor": "Thanks mysterious benefactor.",
+  "imageUrl": "/action-cards/gifted-premium.png",
+  "rarity": "Common"
+}

@@ -1,0 +1,10 @@
+{
+  "id": 20,
+  "title": "Community Notes",
+  "type": "Action",
+  "effect": "Opponent's next attack deals half damage.",
+  "flavor": "Readers added context...",
+  "imageUrl": "/action-cards/community-notes.png",
+  "rarity": "Common",
+  "inspiredBy": "https://x.com/alpaysh/status/1929495949375615055"
+}

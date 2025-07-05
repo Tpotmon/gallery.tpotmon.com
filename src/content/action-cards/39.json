@@ -1,0 +1,10 @@
+{
+  "id": 39,
+  "title": "I'm actually a girl",
+  "type": "Action",
+  "effect": "Claim to be a girl online and gain +5 attack.",
+  "flavor": "The bait’s a little stale, but hey, you get +5 attack.",
+  "imageUrl": "/action-cards/im-a-girl.png",
+  "rarity": "Common",
+  "inspiredBy": "https://x.com/search?q=%22i%27m%20actually%20a%20girl%22&src=typed_query&f=top"
+}

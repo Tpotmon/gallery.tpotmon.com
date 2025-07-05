@@ -1,0 +1,10 @@
+{
+  "id": 30,
+  "title": "Grok Is This True?",
+  "type": "Action",
+  "effect": "Reveal your opponent's hand. If any card was played this turn, cancel its effect.",
+  "flavor": "Nothing escapes the watchful eye of the Grok. Especially not misinformation.",
+  "imageUrl": "/action-cards/grok-is-this-true.png",
+  "rarity": "Uncommon",
+  "inspiredBy": "https://x.com/SageofSapien/status/1933905304531394586"
+}

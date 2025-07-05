@@ -1,0 +1,9 @@
+{
+  "id": 38,
+  "title": "Fake Job Post",
+  "type": "Action",
+  "effect": "Boost comment count dramatically as users ironically engage with a fake hiring post. No real benefits. No one's getting hired.",
+  "flavor": "Post a totally real, definitely serious job listing for a 'Chief Shitposting Officer.'",
+  "imageUrl": "/action-cards/fake-job-post.png",
+  "rarity": "Uncommon"
+}

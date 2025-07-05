@@ -1,0 +1,9 @@
+{
+  "id": 27,
+  "title": "Threads User Detected",
+  "type": "Action",
+  "effect": "Force a player to discard their highest-tier card.",
+  "flavor": "Don't worry, they're not coming back.",
+  "imageUrl": "/action-cards/threads-user-detected.png",
+  "rarity": "Common"
+}
