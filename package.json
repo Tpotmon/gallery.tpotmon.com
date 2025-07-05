@@ -1,19 +1,16 @@
 {
-  "name": "gottafarmemall",
-  "module": "index.ts",
+  "name": "astro",
   "type": "module",
-  "private": true,
+  "version": "0.0.1",
   "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
     "update-users": "bun run actions/getUserData.ts",
-    "test": "bun test"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
+    "preview": "astro preview",
+    "astro": "astro"
   },
   "dependencies": {
+    "astro": "^5.11.0",
     "mongodb": "^6.17.0"
   }
 }

@@ -1,35 +1,52 @@
-# GottaFarmEmAll
+# Astro Starter Kit: Basics
 
-A data collection tool that scrapes X (Twitter) user information for usernames listed in `src/BOOSTERS.csv` and stores the data in MongoDB for later access by LLMs.
-
-## Purpose
-
-This project fetches user profile information from X for a list of 315+ usernames and stores it in a MongoDB database. The collected data can then be accessed and analyzed by Large Language Models for various purposes.
-
-## Data Source
-
-The usernames are stored in `src/BOOSTERS.csv` with the following format:
-- Column 1: Number (0-315)
-- Column 2: Username (without @ symbol)
-
-## Setup
-
-To install dependencies:
-
-```bash
-bun install
+```sh
+bun create astro@latest -- --template basics
 ```
 
-To run:
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
+[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
 
-```bash
-bun run index.ts
+> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+
+![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+
+## 🚀 Project Structure
+
+Inside of your Astro project, you'll see the following folders and files:
+
+```text
+/
+├── public/
+│   └── favicon.svg
+├── src
+│   ├── assets
+│   │   └── astro.svg
+│   ├── components
+│   │   └── Welcome.astro
+│   ├── layouts
+│   │   └── Layout.astro
+│   └── pages
+│       └── index.astro
+└── package.json
 ```
 
-## Requirements
+To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
 
-- Bun runtime
-- MongoDB database
-- X (Twitter) API access (for scraping user data)
+## 🧞 Commands
 
-This project was created using `bun init` in bun v1.2.8. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+All commands are run from the root of the project, from a terminal:
+
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `bun install`             | Installs dependencies                            |
+| `bun dev`             | Starts local dev server at `localhost:4321`      |
+| `bun build`           | Build your production site to `./dist/`          |
+| `bun preview`         | Preview your build locally, before deploying     |
+| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `bun astro -- --help` | Get help using the Astro CLI                     |
+
+## 👀 Want to learn more?
+
+Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
