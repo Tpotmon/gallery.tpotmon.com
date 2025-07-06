@@ -1,0 +1,79 @@
+name: Collect Tweets
+
+on:
+  # Run daily at 3 AM UTC (1 hour after user data update)
+  schedule:
+    - cron: '0 3 * * *'
+  
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      only_stale_profiles:
+        description: 'Only collect tweets for stale profiles'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      stale_hours:
+        description: 'Hours to consider a profile stale'
+        required: false
+        default: '24'
+        type: string
+      max_tweets_per_user:
+        description: 'Maximum tweets to collect per user'
+        required: false
+        default: '100'
+        type: string
+      user_delay_ms:
+        description: 'Delay between users in milliseconds'
+        required: false
+        default: '1000'
+        type: string
+
+env:
+  MONGODB_CONN: ${{ secrets.MONGODB_CONN }}
+  TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+
+jobs:
+  collect-tweets:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+
+    - name: Install dependencies
+      run: bun install
+
+    - name: Set environment variables for manual trigger
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        echo "ONLY_STALE_PROFILES=${{ github.event.inputs.only_stale_profiles }}" >> $GITHUB_ENV
+        echo "STALE_HOURS=${{ github.event.inputs.stale_hours }}" >> $GITHUB_ENV
+        echo "MAX_TWEETS_PER_USER=${{ github.event.inputs.max_tweets_per_user }}" >> $GITHUB_ENV
+        echo "USER_DELAY_MS=${{ github.event.inputs.user_delay_ms }}" >> $GITHUB_ENV
+
+    - name: Set default environment variables for scheduled run
+      if: github.event_name == 'schedule'
+      run: |
+        echo "ONLY_STALE_PROFILES=false" >> $GITHUB_ENV
+        echo "STALE_HOURS=24" >> $GITHUB_ENV
+        echo "MAX_TWEETS_PER_USER=100" >> $GITHUB_ENV
+        echo "USER_DELAY_MS=1000" >> $GITHUB_ENV
+
+    - name: Collect tweets
+      run: bun run actions/getTweets.ts
+
+    - name: Log completion
+      run: |
+        echo "✅ Tweet collection completed successfully"
+        echo "📅 Run time: $(date)"
+        echo "🔧 Trigger: ${{ github.event_name }}"
+        echo "🐦 Script: getTweets.ts"
