@@ -10,9 +10,18 @@ export interface GetUserDataConfig {
   staleHours?: number;
 }
 
+export interface FailureRecord {
+  profileId: string;
+  username?: string;
+  reason: string;
+  error?: string;
+  failureType: 'save_error' | 'api_missing' | 'batch_error';
+}
+
 export class UserDataUpdater {
   private db: DatabaseManager;
   private config: GetUserDataConfig;
+  private failureRecords: FailureRecord[] = [];
 
   constructor(config: GetUserDataConfig) {
     this.config = {
@@ -93,8 +102,16 @@ export class UserDataUpdater {
             
           } catch (saveError) {
             totalFailed++;
-            console.error(`❌ Failed to save @${profile.userName}:`, 
-              saveError instanceof Error ? saveError.message : saveError);
+            const errorMessage = saveError instanceof Error ? saveError.message : String(saveError);
+            console.error(`❌ Failed to save @${profile.userName}:`, errorMessage);
+            
+            this.failureRecords.push({
+              profileId: profile.id,
+              username: profile.userName,
+              reason: `Database save error: ${errorMessage}`,
+              error: errorMessage,
+              failureType: 'save_error'
+            });
           }
         }
 
@@ -103,15 +120,44 @@ export class UserDataUpdater {
           const returnedIds = profiles.map(p => p.id);
           const missingIds = batch.filter(id => !returnedIds.includes(id));
           console.log(`⚠️  ${missingIds.length} profiles not returned by API: ${missingIds.join(', ')}`);
+          
+          // Try to get username from existing data for better failure reporting
+          for (const missingId of missingIds) {
+            const existingProfile = await this.db.getLatestProfileSnapshot(missingId);
+            const username = existingProfile?.username || 'unknown';
+            
+            this.failureRecords.push({
+              profileId: missingId,
+              username: username,
+              reason: 'Profile not returned by Twitter API - possibly deleted, suspended, or private',
+              failureType: 'api_missing'
+            });
+          }
+          
           totalFailed += missingIds.length;
         }
 
         console.log(`✅ Batch ${batchProgress} completed: ${profiles.length} updated`);
 
       } catch (batchError) {
+        const errorMessage = batchError instanceof Error ? batchError.message : String(batchError);
+        console.error(`❌ Batch ${batchProgress} failed:`, errorMessage);
+        
+        // Add all profiles in this batch as failures
+        for (const profileId of batch) {
+          const existingProfile = await this.db.getLatestProfileSnapshot(profileId);
+          const username = existingProfile?.username || 'unknown';
+          
+          this.failureRecords.push({
+            profileId: profileId,
+            username: username,
+            reason: `Batch processing failed: ${errorMessage}`,
+            error: errorMessage,
+            failureType: 'batch_error'
+          });
+        }
+        
         totalFailed += batch.length;
-        console.error(`❌ Batch ${batchProgress} failed:`, 
-          batchError instanceof Error ? batchError.message : batchError);
       }
 
       // Progress report
@@ -141,6 +187,42 @@ export class UserDataUpdater {
     console.log(`⚡ Average time per profile: ${Math.round(avgTimePerProfile)}ms`);
     console.log(`📦 Batches processed: ${batches.length}`);
     console.log('==============================');
+
+    // Detailed failure reporting
+    if (this.failureRecords.length > 0) {
+      console.log(`\n🔍 DETAILED FAILURE REPORT`);
+      console.log('==========================');
+      
+      // Group failures by type
+      const failuresByType = this.failureRecords.reduce((acc, failure) => {
+        if (!acc[failure.failureType]) {
+          acc[failure.failureType] = [];
+        }
+        acc[failure.failureType].push(failure);
+        return acc;
+      }, {} as Record<string, FailureRecord[]>);
+
+      // Report each failure type
+      Object.entries(failuresByType).forEach(([type, failures]) => {
+        console.log(`\n📋 ${type.toUpperCase().replace('_', ' ')} (${failures.length} failures):`);
+        console.log('─'.repeat(50));
+        
+        failures.forEach((failure, index) => {
+          console.log(`${index + 1}. @${failure.username} (ID: ${failure.profileId})`);
+          console.log(`   └── Reason: ${failure.reason}`);
+          if (failure.error) {
+            console.log(`   └── Error: ${failure.error}`);
+          }
+        });
+      });
+
+      console.log(`\n📊 FAILURE SUMMARY:`);
+      console.log('─'.repeat(30));
+      Object.entries(failuresByType).forEach(([type, failures]) => {
+        console.log(`• ${type.replace('_', ' ')}: ${failures.length}`);
+      });
+      console.log('==========================');
+    }
   }
 
   async close(): Promise<void> {
