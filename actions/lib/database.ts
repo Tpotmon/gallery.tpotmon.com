@@ -476,4 +476,12 @@ export class DatabaseManager {
     const result = await this.profilesCollection.aggregate(pipeline).toArray();
     return result.map(doc => doc._id).filter(id => id && typeof id === 'string');
   }
+
+  async getHighestBoosterNumber(): Promise<number> {
+    const result = await this.profilesCollection.findOne(
+      {},
+      { sort: { boosterNumber: -1 } }
+    );
+    return result?.boosterNumber || 0;
+  }
 }

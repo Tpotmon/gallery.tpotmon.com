@@ -7,6 +7,8 @@ export interface GetTweetsConfig {
   maxTweetsPerUser?: number;
   onlyStaleProfiles?: boolean;
   staleHours?: number;
+  maxPagesPerUser?: number;
+  delayBetweenPages?: number;
 }
 
 export interface TweetFailureRecord {
@@ -28,6 +30,8 @@ export class TweetCollector {
       maxTweetsPerUser: 100,
       onlyStaleProfiles: false,
       staleHours: 24,
+      maxPagesPerUser: 3, // Fetch 3 pages to catch engagement updates
+      delayBetweenPages: 500, // 0.5 seconds between pages
       ...config
     };
     this.db = new DatabaseManager(config.mongoConnectionString);
@@ -37,6 +41,8 @@ export class TweetCollector {
     console.log('🔧 Initializing tweet collector...');
     console.log(`   └── Delay between users: ${this.config.delayBetweenUsers}ms`);
     console.log(`   └── Max tweets per user: ${this.config.maxTweetsPerUser}`);
+    console.log(`   └── Max pages per user: ${this.config.maxPagesPerUser}`);
+    console.log(`   └── Delay between pages: ${this.config.delayBetweenPages}ms`);
     console.log(`   └── Only stale profiles: ${this.config.onlyStaleProfiles}`);
     if (this.config.onlyStaleProfiles) {
       console.log(`   └── Stale threshold: ${this.config.staleHours} hours`);
@@ -186,33 +192,74 @@ export class TweetCollector {
 
   private async fetchUserTweets(username: string): Promise<any[]> {
     const query = `from:${username} include:nativeretweets -filter:replies`;
-    const url = `https://api.twitterapi.io/twitter/tweet/advanced_search?queryType=Latest&query=${encodeURIComponent(query)}`;
+    let allTweets: any[] = [];
+    let cursor: string | undefined;
+    let pageCount = 0;
     
     console.log(`   └── Fetching tweets with query: ${query}`);
     
     try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'X-API-Key': this.config.twitterApiKey,
-          'Content-Type': 'application/json'
+      while (pageCount < this.config.maxPagesPerUser!) {
+        pageCount++;
+        
+        // Build URL with cursor if we have one
+        let url = `https://api.twitterapi.io/twitter/tweet/advanced_search?queryType=Latest&query=${encodeURIComponent(query)}`;
+        if (cursor) {
+          url += `&cursor=${encodeURIComponent(cursor)}`;
         }
-      });
+        
+        console.log(`   └── Fetching page ${pageCount}/${this.config.maxPagesPerUser}${cursor ? ` (cursor: ${cursor.substring(0, 20)}...)` : ''}`);
+        
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'X-API-Key': this.config.twitterApiKey,
+            'Content-Type': 'application/json'
+          }
+        });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        if (!data.tweets || !Array.isArray(data.tweets)) {
+          console.log(`   └── Page ${pageCount}: No tweets found or invalid response format`);
+          break;
+        }
+
+        const tweetsThisPage = data.tweets;
+        allTweets.push(...tweetsThisPage);
+        
+        console.log(`   └── Page ${pageCount}: Found ${tweetsThisPage.length} tweets (total: ${allTweets.length})`);
+        
+        // Check if we have a cursor for the next page
+        cursor = data.cursor;
+        if (!cursor || tweetsThisPage.length === 0) {
+          console.log(`   └── No more pages available (${cursor ? 'empty page' : 'no cursor'})`);
+          break;
+        }
+        
+        // Check if we've hit our tweet limit
+        if (allTweets.length >= this.config.maxTweetsPerUser!) {
+          console.log(`   └── Reached max tweets limit (${this.config.maxTweetsPerUser})`);
+          break;
+        }
+        
+        // Delay between pages (except for the last potential page)
+        if (pageCount < this.config.maxPagesPerUser!) {
+          await new Promise(resolve => setTimeout(resolve, this.config.delayBetweenPages));
+        }
       }
-
-      const data = await response.json();
       
-      if (!data.tweets || !Array.isArray(data.tweets)) {
-        console.log(`   └── No tweets found or invalid response format`);
-        return [];
-      }
-
-      return data.tweets.slice(0, this.config.maxTweetsPerUser);
+      // Trim to max tweets if needed
+      const finalTweets = allTweets.slice(0, this.config.maxTweetsPerUser);
+      console.log(`   └── Collected ${finalTweets.length} tweets across ${pageCount} pages`);
+      
+      return finalTweets;
     } catch (error) {
-      console.error(`   └── API request failed: ${error}`);
+      console.error(`   └── API request failed on page ${pageCount}: ${error}`);
       throw error;
     }
   }
@@ -232,7 +279,9 @@ export async function runTweetCollection(): Promise<void> {
     delayBetweenUsers: parseInt(process.env.USER_DELAY_MS || '1000', 10),
     maxTweetsPerUser: parseInt(process.env.MAX_TWEETS_PER_USER || '100', 10),
     onlyStaleProfiles: process.env.ONLY_STALE_PROFILES === 'true',
-    staleHours: parseInt(process.env.STALE_HOURS || '24', 10)
+    staleHours: parseInt(process.env.STALE_HOURS || '24', 10),
+    maxPagesPerUser: parseInt(process.env.MAX_PAGES_PER_USER || '3', 10),
+    delayBetweenPages: parseInt(process.env.PAGE_DELAY_MS || '500', 10)
   };
 
   console.log('📋 Tweet collection configuration:');
@@ -240,6 +289,8 @@ export async function runTweetCollection(): Promise<void> {
   console.log(`   └── Twitter API Key: ${config.twitterApiKey ? '✅ Set' : '❌ Missing'}`);
   console.log(`   └── Delay between users: ${config.delayBetweenUsers}ms`);
   console.log(`   └── Max tweets per user: ${config.maxTweetsPerUser}`);
+  console.log(`   └── Max pages per user: ${config.maxPagesPerUser}`);
+  console.log(`   └── Delay between pages: ${config.delayBetweenPages}ms`);
   console.log(`   └── Only stale profiles: ${config.onlyStaleProfiles}`);
   if (config.onlyStaleProfiles) {
     console.log(`   └── Stale threshold: ${config.staleHours}h`);
