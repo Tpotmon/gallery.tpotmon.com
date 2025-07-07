@@ -23,5 +23,6 @@
   "resistAmount": 10,
   "description": "Selected low hit points due to nanobie tier and modest follower count. Ability mocks nyaaier's ironic propaganda automation and fragmented messaging. Attack riffs on their frequent retweets and nerdy, somewhat cringe content. Weakness is roast type because criticism and sharp commentary hit their awkward meme flood hard, while they resist cringe due to their casual embrace of awkward and low-effort content. Overall, the card reflects a low-tier user known for sarcastic, nerdy online banter with a self-deprecating vibe and moderate engagement.",
   "rarity": "Common",
-  "holo": false
+  "holo": false,
+  "cardType": "normal"
 }
